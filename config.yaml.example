@@ -1,0 +1,128 @@
+# ====== Feishu (Lark) Bot Credentials ======
+feishu:
+  app_id: "cli_xxx"
+  app_secret: "xxx"
+  chat_id: "oc_xxxxxxxxxxxxxxxx"  # run 'python3 scripts/find_chat_id.py' to fill this
+
+# ====== LLM API (支持 OpenAI 兼容接口) ======
+# 可选 provider: deepseek | openai | zhipu | moonshot | qwen | anthropic
+llm:
+  provider: "deepseek"
+  api_key: "${DEEPSEEK_API_KEY}"   # 在 https://platform.deepseek.com 获取
+  api_base: "https://api.deepseek.com/v1"
+  model: "deepseek-v4-flash"       # flash=快速便宜, pro=效果更好
+  max_tokens: 4096
+  temperature: 0.3
+
+# ====== News Sources ======
+sources:
+  rss_feeds:
+    - name: "The Verge - AI"
+      url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+      default_category: "行业动态"
+      enabled: true
+    - name: "TechCrunch - AI"
+      url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+      default_category: "行业动态"
+      enabled: true
+    - name: "Ars Technica - AI"
+      url: "https://feeds.arstechnica.com/arstechnica/ai"
+      default_category: "行业动态"
+      enabled: true
+    - name: "VentureBeat - AI"
+      url: "https://venturebeat.com/category/ai/feed/"
+      default_category: "行业动态"
+      enabled: true
+    - name: "机器之心"
+      url: "https://www.jiqizhixin.com/rss"
+      default_category: "行业动态"
+      enabled: true
+    - name: "量子位"
+      url: "https://www.qbitai.com/feed"
+      default_category: "行业动态"
+      enabled: true
+    - name: "36Kr"
+      url: "https://36kr.com/feed"
+      default_category: "融资收购"
+      enabled: true
+      keywords:
+        - "AI"
+        - "人工智能"
+        - "大模型"
+        - "LLM"
+        - "GPT"
+        - "OpenAI"
+        - "融资"
+        - "收购"
+        - "智能"
+        - "机器人"
+        - "自动驾驶"
+        - "芯片"
+        - "算力"
+        - "Claude"
+        - "Gemini"
+        - "深度学习"
+        - "机器学习"
+
+  hacker_news:
+    enabled: true
+    max_stories: 100
+    keywords:
+      - "AI"
+      - "LLM"
+      - "GPT"
+      - "Claude"
+      - "OpenAI"
+      - "Anthropic"
+      - "Gemini"
+      - "machine learning"
+      - "deep learning"
+      - "transformer"
+      - "neural network"
+      - "language model"
+      - "diffusion"
+      - "LLaMA"
+      - "agent"
+
+  arxiv:
+    enabled: true
+    categories:
+      - "cs.AI"
+      - "cs.CL"
+      - "cs.LG"
+      - "cs.CV"
+    max_results: 25
+    lookback_days: 2
+
+  github_trending:
+    enabled: true
+    languages: ["python", "jupyter-notebook"]
+    ai_keywords:
+      - "llm"
+      - "gpt"
+      - "agent"
+      - "rag"
+      - "langchain"
+      - "transformer"
+      - "diffusion"
+      - "llama"
+      - "embedding"
+      - "mcp"
+      - "vector"
+
+# ====== Processing ======
+processing:
+  dedup_threshold: 85
+  max_articles_for_primary_card: 20
+  batch_size_for_llm: 25
+
+# ====== Scheduling ======
+schedule:
+  time: "09:00"
+  timezone: "Asia/Shanghai"
+
+# ====== Logging ======
+logging:
+  level: "INFO"
+  log_dir: "logs/"
+  retention_days: 30

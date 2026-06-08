@@ -1,0 +1,34 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# Local secrets (real keys, never commit)
+.env
+scripts/setup-env.sh
+
+# Data / cache
+data/token_cache.json
+data/digest_cache.json
+
+# Logs
+logs/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.jpeg
+*.jpg
+*.png
+*.gif

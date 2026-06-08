@@ -1,0 +1,195 @@
+# ====== Feishu (Lark) Bot Credentials ======
+feishu:
+  app_id: "${FEISHU_APP_ID}"
+  app_secret: "${FEISHU_APP_SECRET}"
+  chat_id: "${FEISHU_CHAT_ID}"
+
+# ====== LLM API (supports OpenAI-compatible providers) ======
+llm:
+  provider: "deepseek"             # deepseek | openai | zhipu | moonshot | qwen | anthropic
+  api_key: "${DEEPSEEK_API_KEY}"
+  api_base: "https://api.deepseek.com/v1"
+  model: "deepseek-v4-flash"       # deepseek-v4-flash (fast/cheap) or deepseek-v4-pro
+  max_tokens: 4096
+  temperature: 0
+
+# ====== News Sources ======
+sources:
+  rss_feeds:
+    - name: "The Verge - AI"
+      url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+      default_category: "行业动态"
+      enabled: true
+    - name: "TechCrunch - AI"
+      url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+      default_category: "行业动态"
+      enabled: true
+    - name: "Ars Technica - AI"
+      url: "https://feeds.arstechnica.com/arstechnica/ai"
+      default_category: "行业动态"
+      enabled: false  # feed broken, 404
+    - name: "VentureBeat - AI"
+      url: "https://venturebeat.com/category/ai/feed/"
+      default_category: "行业动态"
+      enabled: true
+    - name: "Nature"
+      url: "https://www.nature.com/nature.rss"
+      default_category: "科研论文"
+      enabled: true
+      keywords:
+        - "AI"
+        - "machine learning"
+        - "deep learning"
+        - "neural"
+        - "protein"
+        - "drug"
+        - "materials"
+        - "genome"
+        - "quantum"
+        - "robot"
+        - "language model"
+        - "AlphaFold"
+        - "transformer"
+        - "diffusion"
+        - "reinforcement"
+    - name: "MIT News"
+      url: "https://news.mit.edu/rss/topic/artificial-intelligence2"
+      default_category: "科研论文"
+      enabled: true
+    - name: "机器之心"
+      url: "https://www.jiqizhixin.com/rss"
+      default_category: "行业动态"
+      enabled: true
+    - name: "量子位"
+      url: "https://www.qbitai.com/feed"
+      default_category: "行业动态"
+      enabled: true
+    - name: "36Kr"
+      url: "https://36kr.com/feed"
+      default_category: "融资收购"
+      enabled: true
+      keywords:
+        - "AI"
+        - "科学智能"
+        - "AI4S"
+        - "蛋白质"
+        - "药物"
+        - "材料"
+        - "分子"
+        - "AISI"
+        - "深势"
+        - "分子之心"
+        - "智源"
+        - "大原子模型"
+        - "AlphaFold"
+        - "脑科学"
+        - "量子"
+        - "算力"
+        - "芯片"
+        - "GPU"
+        - "大模型"
+        - "OpenAI"
+        - "DeepSeek"
+        - "千问"
+        - "豆包"
+        - "文心"
+        - "智谱"
+        - "月之暗面"
+        - "字节"
+        - "阿里"
+        - "华为"
+        - "百度"
+        - "腾讯"
+        - "清华"
+        - "北大"
+        - "复旦"
+        - "浙大"
+        - "Stanford"
+        - "MIT"
+        - "CMU"
+        - "DeepMind"
+        - "Microsoft"
+        - "Meta"
+        - "NVIDIA"
+        - "融资"
+        - "收购"
+
+  hacker_news:
+    enabled: true
+    max_stories: 50
+    keywords:
+      - "OpenAI"
+      - "DeepSeek"
+      - "DeepMind"
+      - "AlphaFold"
+      - "protein"
+      - "drug"
+      - "materials"
+      - "genomics"
+      - "neuroscience"
+      - "quantum"
+      - "theorem"
+      - "Nature"
+      - "Science"
+      - "MIT"
+      - "Stanford"
+      - "CMU"
+      - "Berkeley"
+      - "NVIDIA"
+      - "Claude"
+      - "GPT"
+      - "LLM"
+      - "GPU"
+
+  arxiv:
+    enabled: true
+    categories:
+      - "cs.AI"
+      - "cs.CL"
+      - "cs.LG"
+      - "cs.CV"
+    max_results: 50
+    lookback_days: 7
+
+  github_trending:
+    enabled: true
+    languages: ["python", "jupyter-notebook"]
+    ai_keywords:
+      - "llm"
+      - "gpt"
+      - "agent"
+      - "rag"
+      - "langchain"
+      - "transformer"
+      - "diffusion"
+      - "llama"
+      - "deepseek"
+      - "openai"
+      - "anthropic"
+      - "mcp"
+      - "chatgpt"
+      - "claude"
+      - "qwen"
+      - "kimi"
+      - "whisper"
+      - "stable-diffusion"
+      - "sora"
+      - "text-to"
+
+# ====== Processing ======
+processing:
+  dedup_threshold: 85
+  max_articles_for_primary_card: 10
+  batch_size_for_llm: 15
+  min_score: 4   # AI4S 领域论文/科研成果为主，适当放宽评分线
+
+# ====== Scheduling ======
+schedule:
+  time: "09:00"
+  timezone: "Asia/Shanghai"
+
+# ====== Logging ======
+logging:
+  level: "INFO"
+  log_dir: "logs/"
+  retention_days: 30
