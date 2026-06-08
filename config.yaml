@@ -36,22 +36,7 @@ sources:
       url: "https://www.nature.com/nature.rss"
       default_category: "科研论文"
       enabled: true
-      keywords:
-        - "AI"
-        - "machine learning"
-        - "deep learning"
-        - "neural"
-        - "protein"
-        - "drug"
-        - "materials"
-        - "genome"
-        - "quantum"
-        - "robot"
-        - "language model"
-        - "AlphaFold"
-        - "transformer"
-        - "diffusion"
-        - "reinforcement"
+      # No keyword filter — let LLM judge relevance. Nature = premier science source.
     - name: "MIT News"
       url: "https://news.mit.edu/rss/topic/artificial-intelligence2"
       default_category: "科研论文"
