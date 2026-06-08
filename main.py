@@ -97,18 +97,17 @@ def main():
     else:
         logger.warning("未配置 LLM API Key，使用原始摘要")
 
-    # 6. Filter: only high-impact articles (score >= 6), then top 10
-    min_score = config.get("processing", {}).get("min_score", 6)
+    # 6. Diversity-first selection: ensure balanced coverage across themes
+    min_score = config.get("processing", {}).get("min_score", 4)
     articles.sort(key=lambda a: a.score, reverse=True)
     high_impact = [a for a in articles if a.score >= min_score]
     max_primary = config.get("processing", {}).get("max_articles_for_primary_card", 10)
 
-    if high_impact:
-        primary_articles = high_impact[:max_primary]
-    else:
-        # Fallback: if nothing scores >= 6, just take top articles anyway
+    if not high_impact:
         logger.warning(f"没有 >= {min_score} 分的文章，使用得分最高的 {max_primary} 篇")
-        primary_articles = articles[:max_primary]
+        high_impact = articles[:max_primary]
+
+    primary_articles = _select_diverse(high_impact, max_primary)
 
     logger.info(
         f"高分文章（>= {min_score}）：{len(high_impact)} 篇，"
@@ -124,6 +123,52 @@ def main():
     logger.info(f"已缓存 {yesterday} 的卡片，之后重复运行不会变化")
 
     return _push(card, config, yesterday)
+
+
+def _select_diverse(articles: list, max_count: int) -> list:
+    """Select articles with balanced coverage across three themes."""
+    group_ai4s = {"科研论文"}
+    group_general_ai = {"大模型发布", "开源工具"}
+    group_industry = {"行业动态", "融资收购", "政策监管"}
+
+    groups = {
+        "ai4s": ([a for a in articles if a.category in group_ai4s], 3),
+        "general_ai": ([a for a in articles if a.category in group_general_ai], 4),
+        "industry": ([a for a in articles if a.category in group_industry], 3),
+    }
+
+    for key in groups:
+        groups[key] = (sorted(groups[key][0], key=lambda a: a.score, reverse=True), groups[key][1])
+
+    selected = []
+    used = set()
+
+    for key, (group_articles, quota) in groups.items():
+        taken = 0
+        for a in group_articles:
+            if taken >= quota or len(selected) >= max_count:
+                break
+            if id(a) not in used:
+                selected.append(a)
+                used.add(id(a))
+                taken += 1
+
+    if len(selected) < max_count:
+        remaining = [a for a in articles if id(a) not in used]
+        remaining.sort(key=lambda a: a.score, reverse=True)
+        for a in remaining:
+            if len(selected) >= max_count:
+                break
+            selected.append(a)
+
+    selected.sort(key=lambda a: a.score, reverse=True)
+
+    cat_counts = {}
+    for a in selected:
+        cat_counts[a.category] = cat_counts.get(a.category, 0) + 1
+    logger.info(f"多样性分布: {cat_counts}")
+
+    return selected
 
 
 def _push(card: dict, config: dict, target_date: date) -> int:
