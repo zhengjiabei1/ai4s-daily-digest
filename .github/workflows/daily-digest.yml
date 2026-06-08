@@ -1,4 +1,4 @@
-name: Daily AI4S News Digest
+name: Daily AI News Digest
 
 on:
   schedule:
@@ -22,6 +22,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Restore daily cache
+        uses: actions/cache/restore@v4
+        id: cache-restore
+        with:
+          path: data/
+          key: daily-digest-${{ github.run_date }}
+
       - name: Run daily news digest
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
@@ -29,3 +36,10 @@ jobs:
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
           FEISHU_CHAT_ID: ${{ secrets.FEISHU_CHAT_ID }}
         run: python main.py
+
+      - name: Save daily cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/
+          key: daily-digest-${{ github.run_date }}

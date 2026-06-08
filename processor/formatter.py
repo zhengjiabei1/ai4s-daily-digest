@@ -49,7 +49,7 @@ def build_card(
         "header": {
             "title": {
                 "tag": "plain_text",
-                "content": f"AI for Science 每日速递 | {date_str}",
+                "content": f"AI 每日速递 | {date_str}",
             },
             "template": "blue",
         },
