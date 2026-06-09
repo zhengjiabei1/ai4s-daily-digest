@@ -127,7 +127,8 @@ def summarize_with_llm(
 
                 # Parse the JSON response
                 results = _parse_llm_response(content)
-                if results is None:
+                if results is None or len(results) == 0:
+                    logger.debug(f"LLM batch {batch_start}: empty or invalid JSON, raw: {content[:200]}")
                     if attempt < max_retries - 1:
                         logger.warning(
                             f"LLM batch {batch_start}: failed to parse JSON, "
@@ -222,9 +223,23 @@ def _parse_llm_response(content: str) -> Optional[list[dict]]:
     try:
         data = json.loads(text)
         if isinstance(data, list):
+            if len(data) == 0:
+                logger.debug("Parsed empty JSON array, treating as failure")
+                return None
             return data
     except json.JSONDecodeError as e:
         logger.debug(f"JSON parse error: {e}")
+        # Try to fix truncated JSON: remove last incomplete item and add ]
+        last_brace = text.rfind("}")
+        if last_brace > 0:
+            fixed = text[:last_brace + 1] + "\n]"
+            try:
+                data = json.loads(fixed)
+                if isinstance(data, list) and len(data) > 0:
+                    logger.debug(f"Fixed truncated JSON, recovered {len(data)} items")
+                    return data
+            except json.JSONDecodeError:
+                pass
         logger.debug(f"Raw (first 500 chars): {text[:500]}")
 
     return None
@@ -240,9 +255,16 @@ def _apply_llm_results(
             result_map[item["index"]] = item
 
     for i, article in enumerate(batch):
-        idx = offset + i
-        if idx in result_map:
-            r = result_map[idx]
+        # Match by prompt index OR sequential position
+        llm_idx = offset + i
+        r = result_map.get(llm_idx)
+        # Fallback: if no exact index match, try sequential match
+        if r is None and i < len(results):
+            r = results[i]
+            if not isinstance(r, dict) or "index" not in r:
+                r = None
+
+        if r is not None:
             article.title_cn = r.get("title_cn", "")[:30]
             article.llm_summary = r.get("summary_cn", "")[:300]
             article.score = float(r.get("score", 5))
@@ -251,6 +273,12 @@ def _apply_llm_results(
                 article.category = r["category"]
             if "tag" in r:
                 article.tag = r["tag"][:10]
+        else:
+            logger.warning(f"No LLM result for article {llm_idx}, using fallback")
+            article.title_cn = article.title
+            article.llm_summary = article.summary[:200] if article.summary else ""
+            article.score = 5.0
+            article.llm_score = 5
 
 
 def _apply_heuristic_fallback(batch: list[Article]) -> None:
