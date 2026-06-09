@@ -197,7 +197,7 @@ processing:
   dedup_threshold: 85
   max_articles_for_primary_card: 8
   batch_size_for_llm: 10
-  min_score: 4
+  min_score: 1   # no strict filter — let diversity selector pick best per category
 
 # ====== Scheduling ======
 schedule:
