@@ -1,0 +1,47 @@
+name: Poll Feedback Messages
+
+on:
+  schedule:
+    # Every 10 minutes, offset by 3 min to avoid :00/:30 rush
+    - cron: '3,13,23,33,43,53 * * * *'
+  workflow_dispatch:
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Restore poller state
+        uses: actions/cache/restore@v4
+        id: cache-restore
+        with:
+          path: data/poller_state.json
+          key: poller-state-${{ github.run_id }}
+          restore-keys: |
+            poller-state-
+
+      - name: Run message poller
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          FEISHU_CHAT_ID: ${{ secrets.FEISHU_CHAT_ID }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python scripts/poll_messages.py
+
+      - name: Save poller state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/poller_state.json
+          key: poller-state-${{ github.run_id }}
