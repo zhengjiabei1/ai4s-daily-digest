@@ -40,7 +40,8 @@ SYSTEM_PROMPT = """你是一个 AI 新闻编辑。务必确保所有标题和摘
 4. **category**: 科研论文 | 大模型发布 | 开源工具 | 行业动态 | 融资收购 | 政策监管
 5. **score**: 1-10
 
-返回 JSON 数组。所有文字必须中文。"""
+返回 JSON 数组：[{"index": 0, "tag": "…", "title_cn": "…", "summary_cn": "…", "category": "…", "score": N}, …]
+每个元素必须包含 index 字段（数字）。"""
 
 
 def summarize_with_llm(
@@ -256,11 +257,9 @@ def _apply_llm_results(
         # Match by prompt index OR sequential position
         llm_idx = offset + i
         r = result_map.get(llm_idx)
-        # Fallback: if no exact index match, try sequential match
+        # Fallback: if no exact index match, use sequential order
         if r is None and i < len(results):
             r = results[i]
-            if not isinstance(r, dict) or "index" not in r:
-                r = None
 
         if r is not None:
             article.title_cn = r.get("title_cn", "")[:50]
