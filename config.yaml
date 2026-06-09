@@ -20,23 +20,67 @@ sources:
       url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
       default_category: "行业动态"
       enabled: true
+      keywords:
+        - "GPT"
+        - "Claude"
+        - "Gemini"
+        - "DeepSeek"
+        - "OpenAI"
+        - "Anthropic"
+        - "Google"
+        - "Microsoft"
+        - "Meta"
+        - "NVIDIA"
+        - "model"
+        - "release"
+        - "breakthrough"
+        - "science"
+        - "protein"
+        - "drug"
+        - "AlphaFold"
     - name: "TechCrunch - AI"
       url: "https://techcrunch.com/category/artificial-intelligence/feed/"
       default_category: "行业动态"
       enabled: true
-    - name: "Ars Technica - AI"
-      url: "https://feeds.arstechnica.com/arstechnica/ai"
-      default_category: "行业动态"
-      enabled: false  # feed broken, 404
+      keywords:
+        - "GPT"
+        - "Claude"
+        - "Gemini"
+        - "DeepSeek"
+        - "OpenAI"
+        - "Anthropic"
+        - "Google"
+        - "Microsoft"
+        - "Meta"
+        - "NVIDIA"
+        - "model"
+        - "science"
+        - "protein"
+        - "drug"
+        - "startup"
     - name: "VentureBeat - AI"
       url: "https://venturebeat.com/category/ai/feed/"
       default_category: "行业动态"
+      enabled: true
+      keywords:
+        - "GPT"
+        - "Claude"
+        - "Gemini"
+        - "DeepSeek"
+        - "OpenAI"
+        - "Anthropic"
+        - "model"
+        - "release"
+        - "science"
+        - "research"
+    - name: "Science Daily - AI"
+      url: "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml"
+      default_category: "科研论文"
       enabled: true
     - name: "Nature"
       url: "https://www.nature.com/nature.rss"
       default_category: "科研论文"
       enabled: true
-      # No keyword filter — let LLM judge relevance. Nature = premier science source.
     - name: "MIT News"
       url: "https://news.mit.edu/rss/topic/artificial-intelligence2"
       default_category: "科研论文"
@@ -153,33 +197,15 @@ sources:
       - "cs.CL"
       - "cs.LG"
       - "cs.CV"
-    max_results: 50
+      - "q-bio.BM"        # biomolecules
+      - "q-bio.QM"        # quantitative methods
+      - "physics.chem-ph" # chemical physics
+      - "cond-mat.mtrl-sci" # materials science
+    max_results: 100
     lookback_days: 7
 
   github_trending:
-    enabled: true
-    languages: ["python", "jupyter-notebook"]
-    ai_keywords:
-      - "llm"
-      - "gpt"
-      - "agent"
-      - "rag"
-      - "langchain"
-      - "transformer"
-      - "diffusion"
-      - "llama"
-      - "deepseek"
-      - "openai"
-      - "anthropic"
-      - "mcp"
-      - "chatgpt"
-      - "claude"
-      - "qwen"
-      - "kimi"
-      - "whisper"
-      - "stable-diffusion"
-      - "sora"
-      - "text-to"
+    enabled: false  # dev tools, not AI4S-focused
 
 # ====== Processing ======
 processing:

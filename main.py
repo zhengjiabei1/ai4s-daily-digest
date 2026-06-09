@@ -131,8 +131,8 @@ def _select_diverse(articles: list, max_count: int) -> list:
     group_general_ai = {"大模型发布", "开源工具", "行业动态", "融资收购", "政策监管"}
 
     groups = {
-        "ai4s": ([a for a in articles if a.category in group_ai4s], 5),
-        "general_ai": ([a for a in articles if a.category in group_general_ai], 5),
+        "ai4s": ([a for a in articles if a.category in group_ai4s], 7),
+        "general_ai": ([a for a in articles if a.category in group_general_ai], 3),
     }
 
     for key in groups:
