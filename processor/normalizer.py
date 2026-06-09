@@ -27,6 +27,7 @@ class Article:
     llm_summary: str = ""  # Chinese summary from LLM
     llm_score: int = 0  # Importance score from LLM (1-10)
     title_cn: str = ""  # Chinese title from LLM (falls back to original title)
+    tag: str = ""  # Short category tag (e.g. "AI4S·材料", "通用AI·模型")
     extra: dict = field(default_factory=dict)  # Source-specific metadata
 
     def final_summary(self) -> str:

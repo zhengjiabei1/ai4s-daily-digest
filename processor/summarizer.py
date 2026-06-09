@@ -35,10 +35,11 @@ SYSTEM_PROMPT = """你是一个 AI for Science（AI4S）专业新闻编辑。你
 - 灌水论文、与 AI 无关的新闻
 
 对每篇文章：
-1. **title_cn**: 英文翻译为中文（15字以内），中文保持原样
-2. **summary_cn**: 60-100 字中文摘要
-3. **category**: 科研论文 | 大模型发布 | 开源工具 | 行业动态 | 融资收购 | 政策监管
-4. **score**: AI4S 内容评分标准从宽（有实质性科学价值的即使中等影响力也可给 5-6 分），通用 AI 必须非常重磅才给 6 分以上：
+1. **tag**: 简短主题标签，如 "AI4S·材料"、"AI4S·生物医药"、"通用AI·模型"、"通用AI·商业"、"AISI·材料"、"科研论文·顶刊" 等（6字内）
+2. **title_cn**: 英文翻译为中文（15字以内），中文保持原样
+3. **summary_cn**: 100-200字中文详细摘要，包含日期、机构、具体突破、为什么重要——像新闻简报
+4. **category**: 科研论文 | 大模型发布 | 开源工具 | 行业动态 | 融资收购 | 政策监管
+5. **score**: AI4S 内容评分标准从宽（有实质性科学价值的即使中等影响力也可给 5-6 分），通用 AI 必须非常重磅才给 6 分以上：
    - 8-10：顶刊论文、AISI/DeepMind 级成果、GPT/Claude 系列重大发布
    - 6-7：好的 AI4S 论文/成果、主流大模型里程碑更新
    - 4-5：值得关注的 AI4S 新闻、大模型版本更新
@@ -177,7 +178,7 @@ def summarize_with_llm(
 
 def _build_batch_prompt(batch: list[Article], offset: int) -> str:
     """Build the user prompt for a batch of articles."""
-    lines = ["处理以下 AI 新闻文章。对每篇提供 title_cn、summary_cn、category、score。\n"]
+    lines = ["处理以下 AI 新闻文章。对每篇提供 tag、title_cn、summary_cn、category、score。\n"]
     for i, article in enumerate(batch):
         idx = offset + i
         summary_text = article.summary[:300] if article.summary else "(无摘要)"
@@ -248,17 +249,19 @@ def _apply_llm_results(
         if idx in result_map:
             r = result_map[idx]
             article.title_cn = r.get("title_cn", "")[:30]
-            article.llm_summary = r.get("summary_cn", "")[:100]
+            article.llm_summary = r.get("summary_cn", "")[:300]
             article.score = float(r.get("score", 5))
             article.llm_score = int(r.get("score", 5))
             if "category" in r:
                 article.category = r["category"]
+            if "tag" in r:
+                article.tag = r["tag"][:10]
 
 
 def _apply_heuristic_fallback(batch: list[Article]) -> None:
     """Apply heuristic scoring when LLM is unavailable."""
     for article in batch:
         article.title_cn = article.title
-        article.llm_summary = article.summary[:100] if article.summary else ""
+        article.llm_summary = article.summary[:200] if article.summary else ""
         article.score = 5.0
         article.llm_score = 5

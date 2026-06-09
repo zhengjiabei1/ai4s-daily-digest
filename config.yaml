@@ -10,7 +10,7 @@ llm:
   api_key: "${DEEPSEEK_API_KEY}"
   api_base: "https://api.deepseek.com/v1"
   model: "deepseek-v4-flash"       # deepseek-v4-flash (fast/cheap) or deepseek-v4-pro
-  max_tokens: 4096
+  max_tokens: 8192
   temperature: 0
 
 # ====== News Sources ======
@@ -210,9 +210,9 @@ sources:
 # ====== Processing ======
 processing:
   dedup_threshold: 85
-  max_articles_for_primary_card: 10
-  batch_size_for_llm: 15
-  min_score: 4   # AI4S 领域论文/科研成果为主，适当放宽评分线
+  max_articles_for_primary_card: 8
+  batch_size_for_llm: 10
+  min_score: 4
 
 # ====== Scheduling ======
 schedule:
