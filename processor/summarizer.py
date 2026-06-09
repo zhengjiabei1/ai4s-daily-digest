@@ -127,8 +127,13 @@ def summarize_with_llm(
 
                 # Parse the JSON response
                 results = _parse_llm_response(content)
-                if results is None or len(results) == 0:
-                    logger.debug(f"LLM batch {batch_start}: empty or invalid JSON, raw: {content[:200]}")
+                if results is not None and len(results) > 0:
+                    # Success — apply and break
+                    _apply_llm_results(batch, results, batch_start)
+                    logger.info(f"LLM batch {batch_start}: OK {len(results)} results, score sample: {[r.get('score','?') for r in results[:3]]}")
+                    break
+                else:
+                    logger.info(f"LLM batch {batch_start}: parse returned {type(results).__name__} len={len(results) if results else 'N/A'}, raw[200]: {content[:200]}")
                     if attempt < max_retries - 1:
                         logger.warning(
                             f"LLM batch {batch_start}: failed to parse JSON, "
@@ -143,12 +148,6 @@ def summarize_with_llm(
                         )
                         _apply_heuristic_fallback(batch)
                         break
-
-                _apply_llm_results(batch, results, batch_start)
-                logger.debug(
-                    f"LLM batch {batch_start}: processed {len(batch)} articles"
-                )
-                break  # Success
 
             except requests.RequestException as e:
                 if attempt < max_retries - 1:
