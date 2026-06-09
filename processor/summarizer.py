@@ -34,11 +34,11 @@ SYSTEM_PROMPT = """你是一个 AI 新闻编辑，同时关注 AI for Science（
 - 1-3：纯营销稿、灌水论文、与 AI 无关、完全不值得推送
 
 每篇文章：
-1. **tag**: 主题标签如 "AI4S·材料"、"通用AI·模型"、"通用AI·商业"（6字内）
-2. **title_cn**: 英文翻译为中文（15字内），中文保持原样
-3. **summary_cn**: 100-200字中文新闻简报，包含日期、机构、突破、意义
+1. **tag**: 主题标签，用空格分隔，如 "AI4S · 生物医药"、"AISI · 材料"、"通用 AI · 模型"、"通用 AI · 商业"（8字内）
+2. **title_cn**: 英文翻译为中文（20字内），中文保持原样。要具体有信息量，如"剑桥AI设计疫苗进入临床，世界首款"
+3. **summary_cn**: 150-250字详细新闻简报。必须包含：日期、机构全称、具体数据和数字、为什么是突破、有什么影响。像专业新闻简报一样翔实
 4. **category**: 科研论文 | 大模型发布 | 开源工具 | 行业动态 | 融资收购 | 政策监管
-5. **score**: 按上述标准打分
+5. **score**: AI4S 内容从宽评分（5-9分常见），通用AI重大事件也给高分
 
 返回 JSON 数组，不要其他文字。"""
 
@@ -263,14 +263,14 @@ def _apply_llm_results(
                 r = None
 
         if r is not None:
-            article.title_cn = r.get("title_cn", "")[:30]
-            article.llm_summary = r.get("summary_cn", "")[:300]
+            article.title_cn = r.get("title_cn", "")[:50]
+            article.llm_summary = r.get("summary_cn", "")[:500]
             article.score = float(r.get("score", 5))
             article.llm_score = int(r.get("score", 5))
             if "category" in r:
                 article.category = r["category"]
             if "tag" in r:
-                article.tag = r["tag"][:10]
+                article.tag = r["tag"][:20]
         else:
             logger.warning(f"No LLM result for article {llm_idx}, using fallback")
             article.title_cn = article.title
