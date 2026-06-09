@@ -81,7 +81,7 @@ sources:
     - name: "Google DeepMind Blog"
       url: "https://blog.google/technology/ai/rss/"
       default_category: "科研论文"
-      enabled: true
+      enabled: false  # SSL errors in Actions
     - name: "36Kr"
       url: "https://36kr.com/feed"
       default_category: "融资收购"
@@ -139,7 +139,7 @@ sources:
         - "机器人"
 
   hacker_news:
-    enabled: true
+    enabled: false  # HN too slow for real-time pipeline
     max_stories: 50
     keywords:
       - "OpenAI"
@@ -176,7 +176,7 @@ sources:
       - "Meta"
 
   arxiv:
-    enabled: true
+    enabled: false  # too slow, overloads pipeline
     categories:
       - "cs.AI"
       - "cs.CL"
