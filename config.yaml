@@ -16,60 +16,59 @@ llm:
 # ====== News Sources ======
 sources:
   rss_feeds:
-    - name: "The Verge - AI"
-      url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
-      default_category: "行业动态"
-      enabled: true
-      # AI-specific feed, no extra filter needed
-    - name: "TechCrunch - AI"
-      url: "https://techcrunch.com/category/artificial-intelligence/feed/"
-      default_category: "行业动态"
-      enabled: true
-      # AI-specific feed, no extra filter needed
-    - name: "VentureBeat - AI"
-      url: "https://venturebeat.com/category/ai/feed/"
-      default_category: "行业动态"
-      enabled: true
-      # AI-specific feed
-    - name: "Science Daily - AI"
-      url: "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml"
-      default_category: "科研论文"
-      enabled: false  # 60 articles, no dates, floods pipeline
+    # ── AI4S / 科研来源 ──
     - name: "Nature"
       url: "https://www.nature.com/nature.rss"
       default_category: "科研论文"
       enabled: true
-      keywords:
-        - "artificial intelligence"
-        - "machine learning"
-        - "deep learning"
-        - "neural"
-        - "protein"
-        - "AlphaFold"
-        - "drug"
-        - "materials"
-        - "genome"
-        - "transformer"
-        - "language model"
-        - "reinforcement"
-        - "robot"
-        - "LLM"
-        - "GPT"
-    - name: "MIT News"
+      keywords: ["artificial intelligence", "machine learning", "deep learning", "neural", "protein", "AlphaFold", "drug", "materials", "genome", "transformer", "language model", "reinforcement", "robot", "LLM"]
+    - name: "MIT News - AI"
       url: "https://news.mit.edu/rss/topic/artificial-intelligence2"
       default_category: "科研论文"
       enabled: true
-      keywords:
-        - "AI"
-        - "model"
-        - "neural"
-        - "robot"
-        - "protein"
-        - "drug"
-        - "materials"
-        - "quantum"
-        - "data"
-        - "learning"
+      keywords: ["AI", "model", "neural", "robot", "protein", "drug", "materials", "quantum", "data", "learning"]
+    - name: "Quanta Magazine"
+      url: "https://www.quantamagazine.org/feed/"
+      default_category: "科研论文"
+      enabled: true
+      keywords: ["AI", "machine learning", "neural", "protein", "quantum", "mathematics", "biology", "physics", "computer", "algorithm"]
+    - name: "DeepMind Blog"
+      url: "https://deepmind.google/discover/blog/feed/"
+      default_category: "科研论文"
+      enabled: true
+    - name: "Microsoft Research"
+      url: "https://www.microsoft.com/en-us/research/feed/"
+      default_category: "科研论文"
+      enabled: true
+      keywords: ["AI", "machine learning", "deep learning", "protein", "drug", "materials", "quantum", "language model", "transformer"]
+    - name: "New Scientist - AI"
+      url: "https://www.newscientist.com/subject/artificial-intelligence/feed/"
+      default_category: "科研论文"
+      enabled: true
+    - name: "MIT Tech Review"
+      url: "https://www.technologyreview.com/feed/"
+      default_category: "科研论文"
+      enabled: true
+      keywords: ["AI", "artificial intelligence", "machine learning", "deep learning", "neural", "robot", "biotech", "materials", "climate"]
+    - name: "MarkTechPost"
+      url: "https://www.marktechpost.com/feed/"
+      default_category: "科研论文"
+      enabled: true
+      keywords: ["AI", "LLM", "research", "paper", "deep", "transformer", "diffusion", "protein", "drug", "model"]
+    # ── 通用 AI / 行业动态来源 ──
+    - name: "The Verge - AI"
+      url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+      default_category: "行业动态"
+      enabled: true
+    - name: "TechCrunch - AI"
+      url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+      default_category: "行业动态"
+      enabled: true
+    - name: "VentureBeat - AI"
+      url: "https://venturebeat.com/category/ai/feed/"
+      default_category: "行业动态"
+      enabled: true
+    # ── 中文来源 ──
     - name: "机器之心"
       url: "https://www.jiqizhixin.com/rss"
       default_category: "行业动态"
@@ -78,65 +77,11 @@ sources:
       url: "https://www.qbitai.com/feed"
       default_category: "行业动态"
       enabled: true
-    - name: "Google DeepMind Blog"
-      url: "https://blog.google/technology/ai/rss/"
-      default_category: "科研论文"
-      enabled: false  # SSL errors in Actions
     - name: "36Kr"
       url: "https://36kr.com/feed"
       default_category: "融资收购"
       enabled: true
-      keywords:
-        - "AI"
-        - "大模型"
-        - "LLM"
-        - "GPT"
-        - "ChatGPT"
-        - "OpenAI"
-        - "Claude"
-        - "Anthropic"
-        - "DeepSeek"
-        - "千问"
-        - "豆包"
-        - "文心"
-        - "智谱"
-        - "Kimi"
-        - "月之暗面"
-        - "字节"
-        - "阿里"
-        - "华为"
-        - "腾讯"
-        - "百度"
-        - "小米"
-        - "NVIDIA"
-        - "Microsoft"
-        - "Google"
-        - "科学智能"
-        - "AI4S"
-        - "蛋白质"
-        - "药物"
-        - "材料"
-        - "AISI"
-        - "深势"
-        - "分子之心"
-        - "智源"
-        - "AlphaFold"
-        - "脑科学"
-        - "量子"
-        - "算力"
-        - "芯片"
-        - "GPU"
-        - "清华"
-        - "北大"
-        - "浙大"
-        - "Stanford"
-        - "MIT"
-        - "DeepMind"
-        - "融资"
-        - "收购"
-        - "智能体"
-        - "具身智能"
-        - "机器人"
+      keywords: ["AI", "大模型", "LLM", "GPT", "ChatGPT", "OpenAI", "Claude", "DeepSeek", "千问", "豆包", "文心", "智谱", "字节", "阿里", "华为", "腾讯", "百度", "NVIDIA", "科学智能", "AISI", "深势", "智源", "蛋白质", "药物", "材料", "清华", "北大", "浙大", "Stanford", "MIT", "DeepMind", "融资", "收购"]
 
   hacker_news:
     enabled: false  # HN too slow for real-time pipeline
@@ -176,21 +121,9 @@ sources:
       - "Meta"
 
   arxiv:
-    enabled: false  # too slow, overloads pipeline
-    categories:
-      - "cs.AI"
-      - "cs.CL"
-      - "cs.LG"
-      - "cs.CV"
-      - "q-bio.BM"        # biomolecules
-      - "q-bio.QM"        # quantitative methods
-      - "physics.chem-ph" # chemical physics
-      - "cond-mat.mtrl-sci" # materials science
-    max_results: 100
-    lookback_days: 7
-
+    enabled: false
   github_trending:
-    enabled: false  # dev tools, not AI4S-focused
+    enabled: false
 
 # ====== Processing ======
 processing:
@@ -198,11 +131,6 @@ processing:
   max_articles_for_primary_card: 8
   batch_size_for_llm: 10
   min_score: 1   # no strict filter — let diversity selector pick best per category
-
-# ====== Scheduling ======
-schedule:
-  time: "09:00"
-  timezone: "Asia/Shanghai"
 
 # ====== Logging ======
 logging:
