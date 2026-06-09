@@ -31,11 +31,9 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         summary = article.final_summary()
         url = article.url or ""
 
-        # Title line: bold blue with tag
+        # Title line: bold with tag
         title = article.display_title()
-        lines.append(
-            f"<font color='blue'>**{i}. {tag_str}{title}**</font>"
-        )
+        lines.append(f"**{i}. {tag_str}{title}**")
 
         # Content paragraph — full summary, no truncation
         if url:
