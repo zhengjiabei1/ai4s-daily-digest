@@ -126,15 +126,13 @@ def main():
 
 
 def _select_diverse(articles: list, max_count: int) -> list:
-    """Select articles with balanced coverage across three themes."""
+    """Select articles with balanced coverage across two themes."""
     group_ai4s = {"科研论文"}
-    group_general_ai = {"大模型发布", "开源工具"}
-    group_industry = {"行业动态", "融资收购", "政策监管"}
+    group_general_ai = {"大模型发布", "开源工具", "行业动态", "融资收购", "政策监管"}
 
     groups = {
-        "ai4s": ([a for a in articles if a.category in group_ai4s], 3),
-        "general_ai": ([a for a in articles if a.category in group_general_ai], 4),
-        "industry": ([a for a in articles if a.category in group_industry], 3),
+        "ai4s": ([a for a in articles if a.category in group_ai4s], 5),
+        "general_ai": ([a for a in articles if a.category in group_general_ai], 5),
     }
 
     for key in groups:
