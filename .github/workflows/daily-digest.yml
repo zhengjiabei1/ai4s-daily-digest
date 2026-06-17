@@ -22,11 +22,11 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Start RSSHub (background)
+      - name: Start RSSHub via Docker
         run: |
-          npx -y rsshub --port 1200 &
+          docker run -d --name rsshub -p 1200:1200 diygod/rsshub
           # Wait for RSSHub to be ready
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             if curl -s http://localhost:1200/ > /dev/null 2>&1; then
               echo "RSSHub ready after ${i}s"
               break
