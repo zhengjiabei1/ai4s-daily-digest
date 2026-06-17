@@ -14,7 +14,7 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
-    ai4s = [a for a in articles if a.category == "AI for Science"]
+    ai4s = [a for a in articles if "AI for Science" in a.category or a.category.startswith("AI4S")]
     general = [a for a in articles if "通用" in a.category]
 
     lines = []

@@ -252,7 +252,14 @@ def _apply_llm_results(
             article.score = float(r.get("score", 5))
             article.llm_score = int(r.get("score", 5))
             if "category" in r:
-                article.category = r["category"]
+                cat = r["category"]
+                # Normalize: "通用AI" -> "通用 AI"
+                if "通用" in cat:
+                    article.category = "通用 AI"
+                elif "AI for Science" in cat or "AI4S" in cat:
+                    article.category = "AI for Science"
+                else:
+                    article.category = cat
             if "tag" in r:
                 article.tag = r["tag"][:20]
         else:

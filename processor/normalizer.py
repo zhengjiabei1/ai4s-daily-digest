@@ -20,7 +20,7 @@ class Article:
     title: str
     url: str
     source_name: str
-    category: str  # Default category from source; may be overridden by LLM
+    category: str  # "AI for Science" or "通用 AI" (normalized)
     summary: str = ""  # Original summary/snippet
     published_at: datetime = field(default_factory=datetime.now)
     score: float = 0.0  # Will be set by summarizer or ranker
