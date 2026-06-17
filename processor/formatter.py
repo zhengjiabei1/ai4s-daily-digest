@@ -1,4 +1,4 @@
-"""Feishu card formatter — two-section layout: AI4S + 通用AI."""
+"""Feishu card formatter — two sections: 【AI for Science】 + 【通用 AI】."""
 
 from datetime import date
 from typing import Any
@@ -8,52 +8,33 @@ from processor.normalizer import Article
 MAX_CARD_BYTES = 30_000
 WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 
-AI4S_PREFIX = "AI4S"
-GENERAL_AI_CATEGORY = "通用 AI"
-
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card: 【AI4S】then 【通用AI】."""
+    """Two-section card."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
-    ai4s = [a for a in articles if a.category.startswith(AI4S_PREFIX)]
-    general = [a for a in articles if a.category == GENERAL_AI_CATEGORY]
+    ai4s = [a for a in articles if a.category == "AI for Science"]
+    general = [a for a in articles if "通用" in a.category]
 
     lines = []
+    count = 0
 
-    # ── AI4S section ──
-    if ai4s:
-        lines.append("**【AI for Science】**")
-        for i, a in enumerate(ai4s, 1):
-            tag = a.tag or a.category
+    for section_title, section_articles in [("【AI for Science】", ai4s), ("【通用 AI】", general)]:
+        if not section_articles:
+            continue
+        lines.append(f"**{section_title}**")
+        for a in section_articles:
+            count += 1
             summary = a.final_summary()
             if len(summary) > 120:
                 summary = summary[:120] + "…"
             url = a.url or ""
             title = a.display_title()
-            tag_str = f"【{tag}】" if tag else ""
             if url:
-                lines.append(f"{i}. {tag_str}**{title}**  \n{summary}\n{url}")
+                lines.append(f"{count}. **{title}**  \n{summary}\n{url}")
             else:
-                lines.append(f"{i}. {tag_str}**{title}**  \n{summary}")
-            lines.append("")
-
-    # ── 通用 AI section ──
-    if general:
-        lines.append("**【通用 AI】**")
-        for i, a in enumerate(general, 1):
-            tag = a.tag or a.category
-            summary = a.final_summary()
-            if len(summary) > 120:
-                summary = summary[:120] + "…"
-            url = a.url or ""
-            title = a.display_title()
-            tag_str = f"【{tag}】" if tag else ""
-            if url:
-                lines.append(f"{i}. {tag_str}**{title}**  \n{summary}\n{url}")
-            else:
-                lines.append(f"{i}. {tag_str}**{title}**  \n{summary}")
+                lines.append(f"{count}. **{title}**  \n{summary}")
             lines.append("")
 
     content = "\n".join(lines)
@@ -71,7 +52,7 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
         ],
     }
-    return _trim_to_limit(card, ai4s + general)
+    return _trim_to_limit(card, articles)
 
 
 def _trim_to_limit(card, articles):

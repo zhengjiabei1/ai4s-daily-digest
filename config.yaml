@@ -13,7 +13,7 @@ sources:
   rss_feeds:
   - name: Nature
     url: https://www.nature.com/nature.rss
-    default_category: AI4S · 材料科学
+    default_category: AI for Science
     enabled: true
     keywords:
     - artificial intelligence
@@ -32,7 +32,7 @@ sources:
     - LLM
   - name: MIT News - AI
     url: https://news.mit.edu/rss/topic/artificial-intelligence2
-    default_category: AI4S · 材料科学
+    default_category: AI for Science
     enabled: true
     max_items: 20
     keywords:
@@ -48,7 +48,7 @@ sources:
     - learning
   - name: Quanta Magazine
     url: https://www.quantamagazine.org/feed/
-    default_category: AI4S · 物理
+    default_category: AI for Science
     enabled: true
     keywords:
     - AI
@@ -63,12 +63,12 @@ sources:
     - algorithm
   - name: Google DeepMind
     url: https://deepmind.google/discover/blog/feed/
-    default_category: AI4S · 生物医药
+    default_category: AI for Science
     enabled: true
     max_items: 15
   - name: Meta AI Research
     url: https://research.facebook.com/feed/
-    default_category: AI4S · 材料科学
+    default_category: AI for Science
     enabled: true
     keywords:
     - AI
@@ -83,7 +83,7 @@ sources:
     - generative
   - name: Microsoft Research
     url: https://www.microsoft.com/en-us/research/feed/
-    default_category: AI4S · 材料科学
+    default_category: AI for Science
     enabled: true
     keywords:
     - AI
@@ -97,7 +97,7 @@ sources:
     - transformer
   - name: MIT Tech Review
     url: https://www.technologyreview.com/feed/
-    default_category: AI4S · 材料科学
+    default_category: AI for Science
     enabled: true
     keywords:
     - AI
@@ -159,9 +159,16 @@ sources:
   scrapers:
   - name: 上海AI实验室(浦江)
     url: https://www.shlab.org.cn/news
-    default_category: AI4S · 材料科学
+    default_category: AI for Science
     article_selector: .news-list a, .article-item a, .list-item a, a[href*='/news/']
     base_url: https://www.shlab.org.cn
+    max_items: 10
+    enabled: true
+  - name: 深势科技(DP Technology)
+    url: https://www.dp.tech/publish
+    default_category: AI for Science
+    article_selector: a[href*="mp.weixin.qq.com"]
+    base_url: https://www.dp.tech
     max_items: 10
     enabled: true
   arxiv:

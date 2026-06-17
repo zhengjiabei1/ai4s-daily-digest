@@ -12,26 +12,20 @@ from loguru import logger
 
 from processor.normalizer import Article
 
-SYSTEM_PROMPT = """你是 AI 新闻编辑。所有输出**全部中文**。必须严格区分「AI for Science」和「通用 AI」。
+SYSTEM_PROMPT = """你是 AI 新闻编辑。所有输出**全部中文**。严格区分「AI for Science」和「通用 AI」。
 
 ===== 判断标准 =====
-这条新闻的核心是「用 AI 解决某个科学领域的具体问题」还是「AI 技术本身的进展」？
+【AI for Science】AI 应用于科学研究的突破。AI 驱动的新材料、药物研发、蛋白质设计、基因组学、抗体、催化剂、电池、半导体、量子计算、脑科学、天气预报、碳核算等。重点机构：AISI（北京科学智能研究院）、深势科技、分子之心、BAAI 智源研究院、上海 AI 实验室/浦江实验室、中科院磐石、Google DeepMind、MIT、Stanford。即使涉及大模型发布，只要解决科学问题，就属于 AI for Science。
 
-【AI4S = 用 AI 做科学】AI 应用于数学、物理、化学、材料、生物、医药、脑科学、地球科学、能源、天文、环境等领域的科学研究。关键词：蛋白质、药物、分子、材料、基因组、抗体、催化剂、电池、半导体、量子、神经科学、天气预报、碳核算、科学大模型。
-
-【通用 AI = AI 技术本身】大模型发布/更新、AI 产品、AI 开源工具、AI 公司融资、AI 政策监管。关键词：GPT、Claude、Gemini、DeepSeek、千问、文心、智谱、Kimi、OpenAI、Anthropic、字节、阿里、NVIDIA、MCP、LangChain。
-
-===== 重要：AISI/智源/深势/分子之心/磐石/浦江等机构的成果，即使涉及模型发布，只要它的应用场景是科学问题（材料、药物、蛋白质等），就属于 AI4S。=====
+【通用 AI】AI 技术本身的重大进展。主流大模型发布/更新（GPT/Claude/Gemini/DeepSeek/千问/文心/Kimi等）、科技巨头 AI 动作（OpenAI/Anthropic/字节/阿里/华为/NVIDIA等）、重大融资/收购、AI 政策监管。
 
 每篇文章：
-1. **category**: 从以下 7 个值中**严格选一个**，不要自创：
-   AI4S · 生物医药 | AI4S · 材料科学 | AI4S · 物理 | AI4S · 化学 | AI4S · 脑科学 | AI4S · 地球能源 | 通用 AI
-2. **tag**: 中文标签（6字内），如 "AI4S · 蛋白质设计"、"DeepMind · AlphaFold"、"AISI · DPA4"、"通用 · GPT发布"、"通用 · 融资"
-3. **title_cn**: 中文标题（20字内），有信息量
-4. **summary_cn**: 80-120字中文摘要，谁做了什么、为什么重要
-5. **score**: 1-10（AI4S 内容放宽评分，4-7分常见；通用 AI 只给真正重磅的 6+分，普通新闻 3-5分）
+1. **category**: 严格二选一 —— "AI for Science" 或 "通用 AI"
+2. **title_cn**: 中文标题（20字内）
+3. **summary_cn**: 80-120字中文摘要
+4. **score**: 1-10
 
-返回 JSON：[{"index": 0, "category": "AI4S · 生物医药", "tag": "…", "title_cn": "…", "summary_cn": "…", "score": N}, …]
+返回 JSON：[{"index": 0, "category": "AI for Science", "title_cn": "…", "summary_cn": "…", "score": N}]
 每个元素必须有 index 字段。"""
 
 
@@ -164,7 +158,7 @@ def summarize_with_llm(
 
 def _build_batch_prompt(batch: list[Article], offset: int) -> str:
     """Build the user prompt for a batch of articles."""
-    lines = ["处理以下 AI 新闻文章。对每篇提供 tag、title_cn、summary_cn、category、score。\n"]
+    lines = ["处理以下 AI 新闻文章。对每篇提供 category（'AI for Science' 或 '通用 AI'）、title_cn、summary_cn、score。\n"]
     for i, article in enumerate(batch):
         idx = offset + i
         summary_text = article.summary[:300] if article.summary else "(无摘要)"

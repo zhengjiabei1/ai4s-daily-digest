@@ -21,7 +21,7 @@ class BaaiSource(Source):
 
     @property
     def default_category(self) -> str:
-        return "AI4S · 材料科学"
+        return "AI for Science"
 
     def fetch(self) -> list[RawArticle]:
         articles = []
