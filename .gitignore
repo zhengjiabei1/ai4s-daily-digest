@@ -13,6 +13,7 @@ scripts/setup-env.sh
 # Data / cache
 data/token_cache.json
 data/digest_cache.json
+data/skill_fetched.json
 
 # Logs
 logs/*.log
