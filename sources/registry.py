@@ -11,6 +11,7 @@ from sources.github_trending import GithubTrendingSource
 from sources.hacker_news import HackerNewsSource
 from sources.html_scraper import HtmlNewsSource
 from sources.rss_source import RssSource
+from sources.skill_feed import SkillFeedSource
 
 
 class SourceRegistry:
@@ -89,6 +90,9 @@ class SourceRegistry:
                 base_url=scraper_cfg.get("base_url", scraper_cfg["url"]),
                 max_items=scraper_cfg.get("max_items", 10),
             ))
+
+        # ── Skill-fetched articles (Claude Code skill pre-fetches official pages) ──
+        self._sources.append(SkillFeedSource())
 
         logger.info(f"SourceRegistry: initialized {len(self._sources)} sources")
 
