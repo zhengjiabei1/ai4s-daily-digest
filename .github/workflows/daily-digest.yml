@@ -19,8 +19,20 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: pip install -r requirements.txt
+
+      - name: Start RSSHub (background)
+        run: |
+          npx -y rsshub --port 1200 &
+          # Wait for RSSHub to be ready
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:1200/ > /dev/null 2>&1; then
+              echo "RSSHub ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
 
       - name: Restore daily cache
         uses: actions/cache/restore@v4

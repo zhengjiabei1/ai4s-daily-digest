@@ -35,6 +35,22 @@ sources:
     default_category: 通用 AI
     enabled: true
     max_items: 10
+  - name: 机器之心(RSSHub)
+    url: http://localhost:1200/jiqizhixin/breaking
+    default_category: 通用 AI
+    enabled: true
+  - name: 量子位(RSSHub)
+    url: http://localhost:1200/qbitai
+    default_category: 通用 AI
+    enabled: true
+  - name: 36Kr AI(RSSHub)
+    url: http://localhost:1200/36kr/motif/人工智能
+    default_category: 通用 AI
+    enabled: true
+  - name: GitHub Trending(RSSHub)
+    url: http://localhost:1200/github/trending/daily/python
+    default_category: 通用 AI
+    enabled: true
   baai:
     enabled: true
     max_items: 10
