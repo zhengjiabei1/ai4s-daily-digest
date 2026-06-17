@@ -4,19 +4,20 @@ feishu:
   app_secret: "${FEISHU_APP_SECRET}"
   chat_id: "${FEISHU_CHAT_ID}"
 
-# ====== LLM API (supports OpenAI-compatible providers) ======
+# ====== LLM API ======
 llm:
-  provider: "deepseek"             # deepseek | openai | zhipu | moonshot | qwen | anthropic
+  provider: "deepseek"
   api_key: "${DEEPSEEK_API_KEY}"
   api_base: "https://api.deepseek.com/v1"
-  model: "deepseek-v4-flash"       # deepseek-v4-flash (fast/cheap) or deepseek-v4-pro
+  model: "deepseek-v4-flash"
   max_tokens: 8192
   temperature: 0
 
 # ====== News Sources ======
 sources:
+  # ── 官方 RSS / API 来源 ──
   rss_feeds:
-    # ── AI4S / 科研来源 ──
+    # === AI4S 科研 ===
     - name: "Nature"
       url: "https://www.nature.com/nature.rss"
       default_category: "科研论文"
@@ -32,43 +33,31 @@ sources:
       default_category: "科研论文"
       enabled: true
       keywords: ["AI", "machine learning", "neural", "protein", "quantum", "mathematics", "biology", "physics", "computer", "algorithm"]
-    - name: "DeepMind Blog"
+    - name: "Google DeepMind"
       url: "https://deepmind.google/discover/blog/feed/"
       default_category: "科研论文"
       enabled: true
+    - name: "Meta AI Research"
+      url: "https://research.facebook.com/feed/"
+      default_category: "科研论文"
+      enabled: true
+      keywords: ["AI", "machine learning", "deep learning", "language", "vision", "robot", "transformer", "LLaMA", "reasoning", "generative"]
     - name: "Microsoft Research"
       url: "https://www.microsoft.com/en-us/research/feed/"
       default_category: "科研论文"
       enabled: true
       keywords: ["AI", "machine learning", "deep learning", "protein", "drug", "materials", "quantum", "language model", "transformer"]
-    - name: "New Scientist - AI"
-      url: "https://www.newscientist.com/subject/artificial-intelligence/feed/"
-      default_category: "科研论文"
-      enabled: true
     - name: "MIT Tech Review"
       url: "https://www.technologyreview.com/feed/"
       default_category: "科研论文"
       enabled: true
       keywords: ["AI", "artificial intelligence", "machine learning", "deep learning", "neural", "robot", "biotech", "materials", "climate"]
-    - name: "MarkTechPost"
-      url: "https://www.marktechpost.com/feed/"
-      default_category: "科研论文"
+    # === 通用 AI 官方 ===
+    - name: "OpenAI Blog"
+      url: "https://openai.com/blog/rss.xml"
+      default_category: "大模型发布"
       enabled: true
-      keywords: ["AI", "LLM", "research", "paper", "deep", "transformer", "diffusion", "protein", "drug", "model"]
-    # ── 通用 AI / 行业动态来源 ──
-    - name: "The Verge - AI"
-      url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
-      default_category: "行业动态"
-      enabled: true
-    - name: "TechCrunch - AI"
-      url: "https://techcrunch.com/category/artificial-intelligence/feed/"
-      default_category: "行业动态"
-      enabled: true
-    - name: "VentureBeat - AI"
-      url: "https://venturebeat.com/category/ai/feed/"
-      default_category: "行业动态"
-      enabled: true
-    # ── 中文来源 ──
+    # === 中文 AI 媒体（保留作为补充）===
     - name: "机器之心"
       url: "https://www.jiqizhixin.com/rss"
       default_category: "行业动态"
@@ -81,46 +70,26 @@ sources:
       url: "https://36kr.com/feed"
       default_category: "融资收购"
       enabled: true
-      keywords: ["AI", "大模型", "LLM", "GPT", "ChatGPT", "OpenAI", "Claude", "DeepSeek", "千问", "豆包", "文心", "智谱", "字节", "阿里", "华为", "腾讯", "百度", "NVIDIA", "科学智能", "AISI", "深势", "智源", "蛋白质", "药物", "材料", "清华", "北大", "浙大", "Stanford", "MIT", "DeepMind", "融资", "收购"]
+      keywords: ["AI", "大模型", "GPT", "OpenAI", "DeepSeek", "千问", "字节", "阿里", "华为", "腾讯", "百度", "NVIDIA", "科学智能", "AISI", "深势", "智源", "蛋白质", "药物", "清华", "北大", "浙大", "Stanford", "MIT", "DeepMind", "融资", "收购"]
 
-  hacker_news:
-    enabled: false  # HN too slow for real-time pipeline
-    max_stories: 50
-    keywords:
-      - "OpenAI"
-      - "ChatGPT"
-      - "GPT"
-      - "Claude"
-      - "Anthropic"
-      - "DeepSeek"
-      - "Gemini"
-      - "DeepMind"
-      - "AlphaFold"
-      - "LLM"
-      - "LLaMA"
-      - "Qwen"
-      - "Mistral"
-      - "language model"
-      - "transformer"
-      - "agent"
-      - "protein"
-      - "drug"
-      - "materials"
-      - "genomics"
-      - "quantum"
-      - "NVIDIA"
-      - "GPU"
-      - "Nature"
-      - "Science"
-      - "MIT"
-      - "Stanford"
-      - "CMU"
-      - "Berkeley"
-      - "Microsoft"
-      - "Google"
-      - "Meta"
+  # ── BAAI 智源研究院官方 API ──
+  baai:
+    enabled: true
+    max_items: 10
+
+  # ── 网页抓取：没有 RSS 的官方机构 ──
+  scrapers:
+    - name: "上海AI实验室(浦江)"
+      url: "https://www.shlab.org.cn/news"
+      default_category: "科研论文"
+      article_selector: ".news-list a, .article-item a, .list-item a, a[href*='/news/']"
+      base_url: "https://www.shlab.org.cn"
+      max_items: 10
+      enabled: true
 
   arxiv:
+    enabled: false
+  hacker_news:
     enabled: false
   github_trending:
     enabled: false
@@ -130,7 +99,7 @@ processing:
   dedup_threshold: 85
   max_articles_for_primary_card: 8
   batch_size_for_llm: 10
-  min_score: 1   # no strict filter — let diversity selector pick best per category
+  min_score: 1
 
 # ====== Logging ======
 logging:

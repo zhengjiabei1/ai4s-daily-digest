@@ -6,8 +6,10 @@ from loguru import logger
 
 from sources.arxiv_source import ArxivSource
 from sources.base import RawArticle, Source
+from sources.baai_source import BaaiSource
 from sources.github_trending import GithubTrendingSource
 from sources.hacker_news import HackerNewsSource
+from sources.html_scraper import HtmlNewsSource
 from sources.rss_source import RssSource
 
 
@@ -66,6 +68,26 @@ class SourceRegistry:
                     ai_keywords=github_config.get("ai_keywords"),
                 )
             )
+
+        logger.info(f"SourceRegistry: initialized {len(self._sources)} sources")
+
+        # ── BAAI official API ──
+        baai_config = sources_config.get("baai", {})
+        if baai_config.get("enabled", True):
+            self._sources.append(BaaiSource(max_items=baai_config.get("max_items", 10)))
+
+        # ── HTML scraper for official sites without RSS ──
+        for scraper_cfg in sources_config.get("scrapers", []):
+            if not scraper_cfg.get("enabled", True):
+                continue
+            self._sources.append(HtmlNewsSource(
+                name=scraper_cfg["name"],
+                url=scraper_cfg["url"],
+                default_category=scraper_cfg.get("default_category", "科研论文"),
+                article_selector=scraper_cfg.get("article_selector", "a"),
+                base_url=scraper_cfg.get("base_url", scraper_cfg["url"]),
+                max_items=scraper_cfg.get("max_items", 10),
+            ))
 
         logger.info(f"SourceRegistry: initialized {len(self._sources)} sources")
 
