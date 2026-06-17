@@ -19,7 +19,6 @@ sources:
     - artificial intelligence
     - machine learning
     - deep learning
-    - neural
     - protein
     - AlphaFold
     - drug
@@ -27,60 +26,12 @@ sources:
     - genome
     - transformer
     - language model
-    - reinforcement
-    - robot
     - LLM
-  - name: MIT News - AI
-    url: https://news.mit.edu/rss/topic/artificial-intelligence2
-    default_category: AI for Science
-    enabled: true
-    max_items: 20
-    keywords:
-    - AI
-    - model
-    - neural
-    - robot
-    - protein
-    - drug
-    - materials
-    - quantum
-    - data
-    - learning
-  - name: Quanta Magazine
-    url: https://www.quantamagazine.org/feed/
-    default_category: AI for Science
-    enabled: true
-    keywords:
-    - AI
-    - machine learning
-    - neural
-    - protein
-    - quantum
-    - mathematics
-    - biology
-    - physics
-    - computer
-    - algorithm
   - name: Google DeepMind
     url: https://deepmind.google/discover/blog/feed/
     default_category: AI for Science
     enabled: true
     max_items: 15
-  - name: Meta AI Research
-    url: https://research.facebook.com/feed/
-    default_category: AI for Science
-    enabled: true
-    keywords:
-    - AI
-    - machine learning
-    - deep learning
-    - language
-    - vision
-    - robot
-    - transformer
-    - LLaMA
-    - reasoning
-    - generative
   - name: Microsoft Research
     url: https://www.microsoft.com/en-us/research/feed/
     default_category: AI for Science
@@ -94,81 +45,48 @@ sources:
     - materials
     - quantum
     - language model
-    - transformer
-  - name: MIT Tech Review
-    url: https://www.technologyreview.com/feed/
+  - name: MIT News
+    url: https://news.mit.edu/rss/topic/artificial-intelligence2
     default_category: AI for Science
     enabled: true
+    max_items: 20
     keywords:
     - AI
-    - artificial intelligence
-    - machine learning
-    - deep learning
+    - model
     - neural
     - robot
-    - biotech
+    - protein
+    - drug
     - materials
-    - climate
+    - quantum
   - name: OpenAI Blog
     url: https://openai.com/blog/rss.xml
     default_category: 通用 AI
     enabled: true
     max_items: 10
-  - name: 机器之心
-    url: https://www.jiqizhixin.com/rss
-    default_category: 通用 AI
-    enabled: true
-  - name: 量子位
-    url: https://www.qbitai.com/feed
-    default_category: 通用 AI
-    enabled: true
-  - name: 36Kr
-    url: https://36kr.com/feed
-    default_category: 通用 AI
-    enabled: true
-    keywords:
-    - AI
-    - 大模型
-    - GPT
-    - OpenAI
-    - DeepSeek
-    - 千问
-    - 字节
-    - 阿里
-    - 华为
-    - 腾讯
-    - 百度
-    - NVIDIA
-    - 科学智能
-    - AISI
-    - 深势
-    - 智源
-    - 蛋白质
-    - 药物
-    - 清华
-    - 北大
-    - 浙大
-    - Stanford
-    - MIT
-    - DeepMind
-    - 融资
-    - 收购
   baai:
     enabled: true
     max_items: 10
   scrapers:
-  - name: 上海AI实验室(浦江)
+  - name: 上海 AI 实验室 (浦江)
     url: https://www.shlab.org.cn/news
     default_category: AI for Science
-    article_selector: .news-list a, .article-item a, .list-item a, a[href*='/news/']
+    article_selector: a[href*="/news/"]
     base_url: https://www.shlab.org.cn
     max_items: 10
     enabled: true
-  - name: 深势科技(DP Technology)
+  - name: 深势科技
     url: https://www.dp.tech/publish
     default_category: AI for Science
     article_selector: a[href*="mp.weixin.qq.com"]
     base_url: https://www.dp.tech
+    max_items: 10
+    enabled: true
+  - name: AISI 北京科学智能研究院
+    url: https://www.aisi.ac.cn
+    default_category: AI for Science
+    article_selector: a[href]
+    base_url: https://www.aisi.ac.cn
     max_items: 10
     enabled: true
   arxiv:
