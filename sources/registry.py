@@ -4,12 +4,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from loguru import logger
 
+from sources.aisi_source import AisiSource
 from sources.arxiv_source import ArxivSource
 from sources.base import RawArticle, Source
 from sources.baai_source import BaaiSource
 from sources.github_trending import GithubTrendingSource
 from sources.hacker_news import HackerNewsSource
 from sources.html_scraper import HtmlNewsSource
+from sources.playwright_source import PlaywrightSource
 from sources.rss_source import RssSource
 from sources.skill_feed import SkillFeedSource
 
@@ -73,6 +75,11 @@ class SourceRegistry:
 
         logger.info(f"SourceRegistry: initialized {len(self._sources)} sources")
 
+        # ── AISI official API ──
+        aisi_config = sources_config.get("aisi", {})
+        if aisi_config.get("enabled", True):
+            self._sources.append(AisiSource(max_items=aisi_config.get("max_items", 15)))
+
         # ── BAAI official API ──
         baai_config = sources_config.get("baai", {})
         if baai_config.get("enabled", True):
@@ -93,6 +100,18 @@ class SourceRegistry:
 
         # ── Skill-fetched articles (Claude Code skill pre-fetches official pages) ──
         self._sources.append(SkillFeedSource())
+
+        # ── Playwright JS-rendered pages ──
+        for pw_cfg in sources_config.get("playwright_sources", []):
+            if not pw_cfg.get("enabled", True):
+                continue
+            self._sources.append(PlaywrightSource(
+                name=pw_cfg["name"],
+                url=pw_cfg["url"],
+                default_category=pw_cfg.get("default_category", "AI for Science"),
+                base_url=pw_cfg.get("base_url", pw_cfg["url"]),
+                max_items=pw_cfg.get("max_items", 10),
+            ))
 
         logger.info(f"SourceRegistry: initialized {len(self._sources)} sources")
 

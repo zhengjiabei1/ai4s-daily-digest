@@ -77,6 +77,9 @@ sources:
     default_category: 通用 AI
     enabled: true
     max_items: 10
+  aisi:
+    enabled: true
+    max_items: 15
   baai:
     enabled: true
     max_items: 10
