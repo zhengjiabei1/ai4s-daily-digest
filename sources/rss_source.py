@@ -30,12 +30,14 @@ class RssSource(Source):
         feed_url: str,
         default_category: str = "行业动态",
         keywords: list[str] | None = None,
+        max_items: int = 30,
         timeout: int = 30,
     ):
         self._name = name
         self._feed_url = feed_url
         self._default_category = default_category
-        self._keywords = keywords  # None = accept all, list = filter by title+summary
+        self._keywords = keywords
+        self._max_items = max_items
         self._timeout = timeout
 
     @property
@@ -65,12 +67,13 @@ class RssSource(Source):
                 )
 
             for entry in feed.entries:
+                if len(articles) >= self._max_items:
+                    break
                 try:
                     published = self._parse_date(entry)
                     title = entry.get("title", "").strip()
                     summary = entry.get("summary", entry.get("description", ""))
 
-                    # Keyword filtering (if configured)
                     if self._keywords:
                         text_to_match = f"{title} {summary}".lower()
                         if not any(kw.lower() in text_to_match for kw in self._keywords):

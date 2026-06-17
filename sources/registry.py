@@ -34,7 +34,8 @@ class SourceRegistry:
                     name=feed_cfg["name"],
                     feed_url=feed_cfg["url"],
                     default_category=feed_cfg.get("default_category", "行业动态"),
-                    keywords=feed_cfg.get("keywords"),  # None = no filter
+                    keywords=feed_cfg.get("keywords"),
+                    max_items=feed_cfg.get("max_items", 30),
                 )
             )
 

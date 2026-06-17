@@ -27,6 +27,7 @@ sources:
       url: "https://news.mit.edu/rss/topic/artificial-intelligence2"
       default_category: "科研论文"
       enabled: true
+      max_items: 20
       keywords: ["AI", "model", "neural", "robot", "protein", "drug", "materials", "quantum", "data", "learning"]
     - name: "Quanta Magazine"
       url: "https://www.quantamagazine.org/feed/"
@@ -37,6 +38,7 @@ sources:
       url: "https://deepmind.google/discover/blog/feed/"
       default_category: "科研论文"
       enabled: true
+      max_items: 15
     - name: "Meta AI Research"
       url: "https://research.facebook.com/feed/"
       default_category: "科研论文"
@@ -57,6 +59,7 @@ sources:
       url: "https://openai.com/blog/rss.xml"
       default_category: "大模型发布"
       enabled: true
+      max_items: 10
     # === 中文 AI 媒体（保留作为补充）===
     - name: "机器之心"
       url: "https://www.jiqizhixin.com/rss"
