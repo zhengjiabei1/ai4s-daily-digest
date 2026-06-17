@@ -131,8 +131,8 @@ def _select_diverse(articles: list, max_count: int) -> list:
     group_general = lambda a: "通用" in a.category
 
     groups = {
-        "ai4s": ([a for a in articles if group_ai4s(a)], 6),
-        "general": ([a for a in articles if group_general(a)], 2),
+        "ai4s": ([a for a in articles if group_ai4s(a)], 5),
+        "general": ([a for a in articles if group_general(a)], 3),
     }
 
     for key in groups:

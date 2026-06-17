@@ -18,23 +18,21 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
     general = [a for a in articles if "通用" in a.category]
 
     lines = []
-    count = 0
 
     for section_title, section_articles in [("【AI for Science】", ai4s), ("【通用 AI】", general)]:
         if not section_articles:
             continue
         lines.append(f"**{section_title}**")
-        for a in section_articles:
-            count += 1
+        for i, a in enumerate(section_articles, 1):
             summary = a.final_summary()
             if len(summary) > 120:
                 summary = summary[:120] + "…"
             url = a.url or ""
             title = a.display_title()
             if url:
-                lines.append(f"{count}. **{title}**  \n{summary}\n{url}")
+                lines.append(f"{i}. **{title}**  \n{summary}\n{url}")
             else:
-                lines.append(f"{count}. **{title}**  \n{summary}")
+                lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
     content = "\n".join(lines)
