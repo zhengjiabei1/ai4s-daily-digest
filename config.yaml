@@ -1,111 +1,181 @@
-# ====== Feishu (Lark) Bot Credentials ======
 feishu:
-  app_id: "${FEISHU_APP_ID}"
-  app_secret: "${FEISHU_APP_SECRET}"
-  chat_id: "${FEISHU_CHAT_ID}"
-
-# ====== LLM API ======
+  app_id: ${FEISHU_APP_ID}
+  app_secret: ${FEISHU_APP_SECRET}
+  chat_id: ${FEISHU_CHAT_ID}
 llm:
-  provider: "deepseek"
-  api_key: "${DEEPSEEK_API_KEY}"
-  api_base: "https://api.deepseek.com/v1"
-  model: "deepseek-v4-flash"
+  provider: deepseek
+  api_key: ${DEEPSEEK_API_KEY}
+  api_base: https://api.deepseek.com/v1
+  model: deepseek-v4-flash
   max_tokens: 8192
   temperature: 0
-
-# ====== News Sources ======
 sources:
-  # ── 官方 RSS / API 来源 ──
   rss_feeds:
-    # === AI4S 科研 ===
-    - name: "Nature"
-      url: "https://www.nature.com/nature.rss"
-      default_category: "科研论文"
-      enabled: true
-      keywords: ["artificial intelligence", "machine learning", "deep learning", "neural", "protein", "AlphaFold", "drug", "materials", "genome", "transformer", "language model", "reinforcement", "robot", "LLM"]
-    - name: "MIT News - AI"
-      url: "https://news.mit.edu/rss/topic/artificial-intelligence2"
-      default_category: "科研论文"
-      enabled: true
-      max_items: 20
-      keywords: ["AI", "model", "neural", "robot", "protein", "drug", "materials", "quantum", "data", "learning"]
-    - name: "Quanta Magazine"
-      url: "https://www.quantamagazine.org/feed/"
-      default_category: "科研论文"
-      enabled: true
-      keywords: ["AI", "machine learning", "neural", "protein", "quantum", "mathematics", "biology", "physics", "computer", "algorithm"]
-    - name: "Google DeepMind"
-      url: "https://deepmind.google/discover/blog/feed/"
-      default_category: "科研论文"
-      enabled: true
-      max_items: 15
-    - name: "Meta AI Research"
-      url: "https://research.facebook.com/feed/"
-      default_category: "科研论文"
-      enabled: true
-      keywords: ["AI", "machine learning", "deep learning", "language", "vision", "robot", "transformer", "LLaMA", "reasoning", "generative"]
-    - name: "Microsoft Research"
-      url: "https://www.microsoft.com/en-us/research/feed/"
-      default_category: "科研论文"
-      enabled: true
-      keywords: ["AI", "machine learning", "deep learning", "protein", "drug", "materials", "quantum", "language model", "transformer"]
-    - name: "MIT Tech Review"
-      url: "https://www.technologyreview.com/feed/"
-      default_category: "科研论文"
-      enabled: true
-      keywords: ["AI", "artificial intelligence", "machine learning", "deep learning", "neural", "robot", "biotech", "materials", "climate"]
-    # === 通用 AI 官方 ===
-    - name: "OpenAI Blog"
-      url: "https://openai.com/blog/rss.xml"
-      default_category: "大模型发布"
-      enabled: true
-      max_items: 10
-    # === 中文 AI 媒体（保留作为补充）===
-    - name: "机器之心"
-      url: "https://www.jiqizhixin.com/rss"
-      default_category: "行业动态"
-      enabled: true
-    - name: "量子位"
-      url: "https://www.qbitai.com/feed"
-      default_category: "行业动态"
-      enabled: true
-    - name: "36Kr"
-      url: "https://36kr.com/feed"
-      default_category: "融资收购"
-      enabled: true
-      keywords: ["AI", "大模型", "GPT", "OpenAI", "DeepSeek", "千问", "字节", "阿里", "华为", "腾讯", "百度", "NVIDIA", "科学智能", "AISI", "深势", "智源", "蛋白质", "药物", "清华", "北大", "浙大", "Stanford", "MIT", "DeepMind", "融资", "收购"]
-
-  # ── BAAI 智源研究院官方 API ──
+  - name: Nature
+    url: https://www.nature.com/nature.rss
+    default_category: AI4S · 材料科学
+    enabled: true
+    keywords:
+    - artificial intelligence
+    - machine learning
+    - deep learning
+    - neural
+    - protein
+    - AlphaFold
+    - drug
+    - materials
+    - genome
+    - transformer
+    - language model
+    - reinforcement
+    - robot
+    - LLM
+  - name: MIT News - AI
+    url: https://news.mit.edu/rss/topic/artificial-intelligence2
+    default_category: AI4S · 材料科学
+    enabled: true
+    max_items: 20
+    keywords:
+    - AI
+    - model
+    - neural
+    - robot
+    - protein
+    - drug
+    - materials
+    - quantum
+    - data
+    - learning
+  - name: Quanta Magazine
+    url: https://www.quantamagazine.org/feed/
+    default_category: AI4S · 物理
+    enabled: true
+    keywords:
+    - AI
+    - machine learning
+    - neural
+    - protein
+    - quantum
+    - mathematics
+    - biology
+    - physics
+    - computer
+    - algorithm
+  - name: Google DeepMind
+    url: https://deepmind.google/discover/blog/feed/
+    default_category: AI4S · 生物医药
+    enabled: true
+    max_items: 15
+  - name: Meta AI Research
+    url: https://research.facebook.com/feed/
+    default_category: AI4S · 材料科学
+    enabled: true
+    keywords:
+    - AI
+    - machine learning
+    - deep learning
+    - language
+    - vision
+    - robot
+    - transformer
+    - LLaMA
+    - reasoning
+    - generative
+  - name: Microsoft Research
+    url: https://www.microsoft.com/en-us/research/feed/
+    default_category: AI4S · 材料科学
+    enabled: true
+    keywords:
+    - AI
+    - machine learning
+    - deep learning
+    - protein
+    - drug
+    - materials
+    - quantum
+    - language model
+    - transformer
+  - name: MIT Tech Review
+    url: https://www.technologyreview.com/feed/
+    default_category: AI4S · 材料科学
+    enabled: true
+    keywords:
+    - AI
+    - artificial intelligence
+    - machine learning
+    - deep learning
+    - neural
+    - robot
+    - biotech
+    - materials
+    - climate
+  - name: OpenAI Blog
+    url: https://openai.com/blog/rss.xml
+    default_category: 通用 AI
+    enabled: true
+    max_items: 10
+  - name: 机器之心
+    url: https://www.jiqizhixin.com/rss
+    default_category: 通用 AI
+    enabled: true
+  - name: 量子位
+    url: https://www.qbitai.com/feed
+    default_category: 通用 AI
+    enabled: true
+  - name: 36Kr
+    url: https://36kr.com/feed
+    default_category: 通用 AI
+    enabled: true
+    keywords:
+    - AI
+    - 大模型
+    - GPT
+    - OpenAI
+    - DeepSeek
+    - 千问
+    - 字节
+    - 阿里
+    - 华为
+    - 腾讯
+    - 百度
+    - NVIDIA
+    - 科学智能
+    - AISI
+    - 深势
+    - 智源
+    - 蛋白质
+    - 药物
+    - 清华
+    - 北大
+    - 浙大
+    - Stanford
+    - MIT
+    - DeepMind
+    - 融资
+    - 收购
   baai:
     enabled: true
     max_items: 10
-
-  # ── 网页抓取：没有 RSS 的官方机构 ──
   scrapers:
-    - name: "上海AI实验室(浦江)"
-      url: "https://www.shlab.org.cn/news"
-      default_category: "科研论文"
-      article_selector: ".news-list a, .article-item a, .list-item a, a[href*='/news/']"
-      base_url: "https://www.shlab.org.cn"
-      max_items: 10
-      enabled: true
-
+  - name: 上海AI实验室(浦江)
+    url: https://www.shlab.org.cn/news
+    default_category: AI4S · 材料科学
+    article_selector: .news-list a, .article-item a, .list-item a, a[href*='/news/']
+    base_url: https://www.shlab.org.cn
+    max_items: 10
+    enabled: true
   arxiv:
     enabled: false
   hacker_news:
     enabled: false
   github_trending:
     enabled: false
-
-# ====== Processing ======
 processing:
   dedup_threshold: 85
   max_articles_for_primary_card: 8
   batch_size_for_llm: 10
   min_score: 1
-
-# ====== Logging ======
 logging:
-  level: "INFO"
-  log_dir: "logs/"
+  level: INFO
+  log_dir: logs/
   retention_days: 30

@@ -12,36 +12,27 @@ from loguru import logger
 
 from processor.normalizer import Article
 
-SYSTEM_PROMPT = """你是一个 AI 新闻编辑。务必确保所有标题和摘要**全部使用中文**，英文术语必须翻译或附中文解释。
+SYSTEM_PROMPT = """你是 AI 新闻编辑。所有输出**全部中文**。必须严格区分「AI for Science」和「通用 AI」。
 
-【AI for Science（AI4S）— 重点关注】
-- 物质科学：新材料发现、催化剂、电池、半导体、大原子模型（DPA4）、MatterGen 等
-- 生命科学：蛋白质结构预测/设计、药物发现、基因组学、抗体设计、脑科学
-- 数学物理：定理证明、物理模拟、量子计算
-- 重点机构：AISI（北京科学智能研究院）、深势科技、分子之心、智源研究院、清华、北大、浙大、Stanford、MIT、DeepMind
-- 顶刊顶会：Nature、Science、Cell 等
+===== 判断标准 =====
+这条新闻的核心是「用 AI 解决某个科学领域的具体问题」还是「AI 技术本身的进展」？
 
-【通用 AI 重大进展 — 同等重视】
-- 主流大模型发布更新：GPT/ChatGPT、Claude、Gemini、DeepSeek、千问、豆包、文心、智谱、Kimi 等
-- 科技巨头重要 AI 动作：OpenAI、Anthropic、Google、Microsoft、Meta、字节、阿里、华为、腾讯、NVIDIA
-- 重磅开源项目与工具
-- 重大融资（> 1 亿美元）/ IPO / 收购
+【AI4S = 用 AI 做科学】AI 应用于数学、物理、化学、材料、生物、医药、脑科学、地球科学、能源、天文、环境等领域的科学研究。关键词：蛋白质、药物、分子、材料、基因组、抗体、催化剂、电池、半导体、量子、神经科学、天气预报、碳核算、科学大模型。
 
-评分标准：
-- 8-10：GPT/Claude 重大发布、Nature/Science 论文、AISI/DeepMind 级成果、超 5 亿美元融资
-- 6-7：主流大模型更新、好的 AI4S 论文、大公司重要 AI 产品、超 1 亿美元融资
-- 4-5：普通 AI 新闻、值得关注的论文/工具 —— 大部分内容在此范围
-- 1-3：纯营销、灌水论文、与 AI 无关、不值得推送
+【通用 AI = AI 技术本身】大模型发布/更新、AI 产品、AI 开源工具、AI 公司融资、AI 政策监管。关键词：GPT、Claude、Gemini、DeepSeek、千问、文心、智谱、Kimi、OpenAI、Anthropic、字节、阿里、NVIDIA、MCP、LangChain。
+
+===== 重要：AISI/智源/深势/分子之心/磐石/浦江等机构的成果，即使涉及模型发布，只要它的应用场景是科学问题（材料、药物、蛋白质等），就属于 AI4S。=====
 
 每篇文章：
-1. **tag**: 中文主题标签，用空格分隔，如 "AI4S · 生物医药"、"AISI · 材料"、"通用 AI · 模型"、"通用 AI · 商业"（10字内）
-2. **title_cn**: 全部中文，具体有信息量，如"剑桥 AI 设计疫苗进入临床，世界首款"（25字内）
-3. **summary_cn**: 80-120 字中文摘要。一句话说清谁做了什么、为什么重要。**严禁英文**
-4. **category**: 科研论文 | 大模型发布 | 开源工具 | 行业动态 | 融资收购 | 政策监管
-5. **score**: 1-10
+1. **category**: 从以下 7 个值中**严格选一个**，不要自创：
+   AI4S · 生物医药 | AI4S · 材料科学 | AI4S · 物理 | AI4S · 化学 | AI4S · 脑科学 | AI4S · 地球能源 | 通用 AI
+2. **tag**: 中文标签（6字内），如 "AI4S · 蛋白质设计"、"DeepMind · AlphaFold"、"AISI · DPA4"、"通用 · GPT发布"、"通用 · 融资"
+3. **title_cn**: 中文标题（20字内），有信息量
+4. **summary_cn**: 80-120字中文摘要，谁做了什么、为什么重要
+5. **score**: 1-10（AI4S 内容放宽评分，4-7分常见；通用 AI 只给真正重磅的 6+分，普通新闻 3-5分）
 
-返回 JSON 数组：[{"index": 0, "tag": "…", "title_cn": "…", "summary_cn": "…", "category": "…", "score": N}, …]
-每个元素必须包含 index 字段（数字）。"""
+返回 JSON：[{"index": 0, "category": "AI4S · 生物医药", "tag": "…", "title_cn": "…", "summary_cn": "…", "score": N}, …]
+每个元素必须有 index 字段。"""
 
 
 def summarize_with_llm(

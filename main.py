@@ -126,13 +126,13 @@ def main():
 
 
 def _select_diverse(articles: list, max_count: int) -> list:
-    """Select articles with balanced coverage across two themes."""
-    group_ai4s = {"科研论文"}
-    group_general_ai = {"大模型发布", "开源工具", "行业动态", "融资收购", "政策监管"}
+    """Select articles: AI4S 6 + 通用 AI 2."""
+    group_ai4s = lambda a: a.category.startswith("AI4S")
+    group_general_ai = lambda a: a.category == "通用 AI"
 
     groups = {
-        "ai4s": ([a for a in articles if a.category in group_ai4s], 6),
-        "general_ai": ([a for a in articles if a.category in group_general_ai], 2),
+        "ai4s": ([a for a in articles if group_ai4s(a)], 6),
+        "general_ai": ([a for a in articles if group_general_ai(a)], 2),
     }
 
     for key in groups:
