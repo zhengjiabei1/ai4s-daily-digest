@@ -57,7 +57,7 @@ def normalize(raw_articles: list[RawArticle]) -> list[Article]:
                 source_name=raw.source_name,
                 category=raw.default_category,
                 summary=_truncate(raw.summary.strip(), 500),
-                published_at=raw.published_at or datetime.now(),
+                published_at=raw.published_at,  # keep None as None for scrapers
                 extra=raw.extra,
             )
             articles.append(article)
