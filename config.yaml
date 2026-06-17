@@ -11,31 +11,16 @@ llm:
   temperature: 0
 sources:
   rss_feeds:
-  - name: Nature
-    url: https://www.nature.com/nature.rss
-    default_category: AI for Science
-    enabled: true
-    keywords:
-    - artificial intelligence
-    - machine learning
-    - deep learning
-    - protein
-    - AlphaFold
-    - drug
-    - materials
-    - genome
-    - transformer
-    - language model
-    - LLM
   - name: Google DeepMind
     url: https://deepmind.google/discover/blog/feed/
     default_category: AI for Science
     enabled: true
-    max_items: 15
+    max_items: 10
   - name: Microsoft Research
     url: https://www.microsoft.com/en-us/research/feed/
     default_category: AI for Science
     enabled: true
+    max_items: 10
     keywords:
     - AI
     - machine learning
@@ -45,20 +30,6 @@ sources:
     - materials
     - quantum
     - language model
-  - name: MIT News
-    url: https://news.mit.edu/rss/topic/artificial-intelligence2
-    default_category: AI for Science
-    enabled: true
-    max_items: 20
-    keywords:
-    - AI
-    - model
-    - neural
-    - robot
-    - protein
-    - drug
-    - materials
-    - quantum
   - name: OpenAI Blog
     url: https://openai.com/blog/rss.xml
     default_category: 通用 AI
@@ -68,8 +39,15 @@ sources:
     enabled: true
     max_items: 10
   scrapers:
+  - name: DeepModeling 社区博客 (AISI)
+    url: https://deepmodeling.com/blog
+    default_category: AI for Science
+    article_selector: a.post-title-link
+    base_url: https://deepmodeling.com
+    max_items: 10
+    enabled: true
   - name: 上海 AI 实验室 (浦江)
-    url: https://www.shlab.org.cn/news
+    url: https://www.shlab.org.cn/info
     default_category: AI for Science
     article_selector: a[href*="/news/"]
     base_url: https://www.shlab.org.cn
@@ -80,13 +58,6 @@ sources:
     default_category: AI for Science
     article_selector: a[href*="mp.weixin.qq.com"]
     base_url: https://www.dp.tech
-    max_items: 10
-    enabled: true
-  - name: AISI 北京科学智能研究院
-    url: https://www.aisi.ac.cn
-    default_category: AI for Science
-    article_selector: a[href]
-    base_url: https://www.aisi.ac.cn
     max_items: 10
     enabled: true
   arxiv:
