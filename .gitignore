@@ -14,6 +14,7 @@ scripts/setup-env.sh
 data/token_cache.json
 data/digest_cache.json
 data/skill_fetched.json
+data/p2p_seen.json
 
 # Logs
 logs/*.log
