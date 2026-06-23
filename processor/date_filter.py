@@ -12,19 +12,11 @@ def filter_by_date(
     target_date: datetime | None = None,
     days_window: int = 3,
 ) -> list[Article]:
-    """Keep articles from a recent window around the target date.
+    """Keep only articles from the last N days.
 
-    Many RSS feeds (Nature, MIT News, Arxiv) don't include precise
-    dates, so we keep articles from the last N days plus articles
-    without dates as fallback.
-
-    Args:
-        articles: Articles to filter.
-        target_date: Center of the date window. Defaults to yesterday.
-        days_window: Number of days to look back (inclusive).
-
-    Returns:
-        Filtered list of articles.
+    Articles without dates are kept ONLY if we have fewer than
+    10 dated articles — otherwise we assume they're stale.
+    This prevents old scraped content from flooding the digest.
     """
     if target_date is None:
         target_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
@@ -40,11 +32,15 @@ def filter_by_date(
         elif oldest.date() <= pub.date() <= target_date.date():
             kept.append(article)
 
-    kept.extend(no_date)
+    # Articles without dates: only keep a small number as supplement
+    # They're likely scraped content; don't let them dominate
+    max_no_date = max(0, 20 - len(kept))
+    kept.extend(no_date[:max_no_date])
 
     logger.info(
         f"Date filter ({oldest.date()} ~ {target_date.date()}): "
-        f"kept {len(kept) - len(no_date)} with date + "
-        f"{len(no_date)} without date = {len(kept)} total"
+        f"kept {len(kept)} total ({len(kept) - min(len(no_date), len(kept))} dated, "
+        f"{min(len(no_date), len(kept))} no-date), "
+        f"dropped {len(articles) - len(kept)} old/undated"
     )
     return kept

@@ -82,7 +82,7 @@ class HtmlNewsSource(Source):
                     summary="",
                     source_name=self._name,
                     default_category=self._default_category,
-                    published_at=None,  # no date = always passes filter
+                    published_at=datetime.now(),  # scraped from current page = recent
                 ))
                 count += 1
             logger.info(f"{self._name}: scraped {len(articles)} articles")
