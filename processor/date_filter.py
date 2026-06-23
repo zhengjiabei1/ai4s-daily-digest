@@ -34,7 +34,7 @@ def filter_by_date(
 
     # Articles without dates: only keep a small number as supplement
     # They're likely scraped content; don't let them dominate
-    max_no_date = max(0, 40 - len(kept))
+    max_no_date = min(len(no_date), 5)  # at most 5 undated articles
     kept.extend(no_date[:max_no_date])
 
     logger.info(
