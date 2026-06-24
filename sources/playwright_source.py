@@ -122,7 +122,7 @@ class PlaywrightSource(Source):
                     summary="",
                     source_name=self._name,
                     default_category=self._default_category,
-                    published_at=datetime.now(),
+                    published_at=None,
                 ))
 
                 if len(articles) >= self._max_items:

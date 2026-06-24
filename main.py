@@ -64,7 +64,7 @@ def main():
     # 3. Filter to yesterday
     logger.info("第 3 步：筛选前一天的内容...")
     yesterday_dt = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
-    articles = filter_by_date(articles, target_date=yesterday_dt, days_window=1)
+    articles = filter_by_date(articles, target_date=yesterday_dt, days_window=0)
     if not articles:
         logger.warning(f"没有找到 {yesterday} 的新闻，跳过推送")
         return 0

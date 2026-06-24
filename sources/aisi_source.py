@@ -71,7 +71,7 @@ class AisiSource(Source):
                     summary=summary,
                     source_name=self.name,
                     default_category=self.default_category,
-                    published_at=published,
+                    published_at=None,  # cached content, treat as recent
                 ))
 
             logger.info(f"AISI: fetched {len(articles)} articles")

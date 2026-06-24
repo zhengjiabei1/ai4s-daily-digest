@@ -49,7 +49,7 @@ class BaaiSource(Source):
                     summary=item.get("description", ""),
                     source_name=self.name,
                     default_category=self.default_category,
-                    published_at=published,  # use actual date for recency filtering
+                    published_at=None,  # treat as yesterday's content
                 ))
             logger.info(f"BAAI: fetched {len(articles)} articles")
         except Exception as e:
