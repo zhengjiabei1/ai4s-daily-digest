@@ -1,0 +1,27 @@
+stages:
+  - digest
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+daily-digest:
+  stage: digest
+  image: python:3.12
+  timeout: 15 minutes
+  cache:
+    key: daily-digest
+    paths:
+      - data/
+  before_script:
+    - pip install -r requirements.txt
+  script:
+    - python main.py
+  only:
+    - schedules
+    - web  # allow manual trigger
+    - main  # allow push to main for testing
+  artifacts:
+    when: always
+    paths:
+      - logs/
+    expire_in: 7 days
