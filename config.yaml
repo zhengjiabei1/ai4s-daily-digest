@@ -11,6 +11,51 @@ llm:
   temperature: 0
 sources:
   rss_feeds:
+  - name: Nature
+    url: https://www.nature.com/nature.rss
+    default_category: AI for Science
+    enabled: true
+    max_items: 10
+    keywords:
+    - artificial intelligence
+    - machine learning
+    - protein
+    - AlphaFold
+    - drug
+    - materials
+    - genome
+    - transformer
+    - language model
+    - robot
+  - name: MIT News
+    url: https://news.mit.edu/rss/topic/artificial-intelligence2
+    default_category: AI for Science
+    enabled: true
+    max_items: 15
+    keywords:
+    - AI
+    - machine
+    - robot
+    - protein
+    - drug
+    - materials
+    - quantum
+    - learning
+  - name: Meta AI Research
+    url: https://research.facebook.com/feed/
+    default_category: AI for Science
+    enabled: true
+    max_items: 10
+    keywords:
+    - AI
+    - machine
+    - language
+    - vision
+    - robot
+    - transformer
+    - LLaMA
+    - generative
+    - science
   - name: Google DeepMind
     url: https://deepmind.google/discover/blog/feed/
     default_category: AI for Science
@@ -78,10 +123,10 @@ sources:
     enabled: true
     max_items: 10
   aisi:
-    enabled: true
+    enabled: false  # API returns 2025 content — too old
     max_items: 15
   baai:
-    enabled: true
+    enabled: false  # API returns April-May content — too old
     max_items: 10
   scrapers:
   - name: DeepModeling 社区博客 (AISI)
