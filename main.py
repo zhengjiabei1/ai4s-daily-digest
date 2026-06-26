@@ -97,7 +97,20 @@ def main():
     else:
         logger.warning("未配置 LLM API Key，使用原始摘要")
 
-    # 6. Diversity-first selection: ensure balanced coverage across themes
+    # 5b. Fix LLM misclassification: Nature/MIT/DeepModeling = must be AI for Science
+    ai4s_sources = {"Nature", "MIT News", "Google DeepMind", "Meta AI Research",
+                    "Microsoft Research", "AISI", "DeepModeling", "深势科技",
+                    "上海 AI", "BAAI"}
+    fixed = 0
+    for a in articles:
+        if "通用" in a.category and any(s in a.source_name for s in ai4s_sources):
+            if "AI" in a.title or "model" in a.title.lower() or "learning" in a.title.lower() or "protein" in a.title.lower() or "drug" in a.title.lower():
+                a.category = "AI for Science"
+                fixed += 1
+    if fixed:
+        logger.info(f"分类修正: {fixed} 篇科研源文章纠正为 AI for Science")
+
+    # 6. Diversity-first selection
     min_score = config.get("processing", {}).get("min_score", 4)
     articles.sort(key=lambda a: a.score, reverse=True)
     high_impact = [a for a in articles if a.score >= min_score]

@@ -14,19 +14,34 @@ from processor.normalizer import Article
 
 SYSTEM_PROMPT = """你是 AI 新闻编辑。所有输出**全部中文**。严格区分「AI for Science」和「通用 AI」。
 
-===== 判断标准 =====
-【AI for Science】AI 应用于科学研究的突破。AI 驱动的新材料、药物研发、蛋白质设计、基因组学、抗体、催化剂、电池、半导体、量子计算、脑科学、天气预报、碳核算等。重点机构：AISI（北京科学智能研究院）、深势科技、分子之心、BAAI 智源研究院、上海 AI 实验室/浦江实验室、中科院磐石、Google DeepMind、MIT、Stanford。即使涉及大模型发布，只要解决科学问题，就属于 AI for Science。
+如果一篇文章根本没有提到AI/大模型/机器学习，就不应该出现在推送中。这类文章直接给低分（1-3）。
 
-【通用 AI】AI 技术本身的重大进展。主流大模型发布/更新（GPT/Claude/Gemini/DeepSeek/千问/文心/Kimi等）、科技巨头 AI 动作（OpenAI/Anthropic/字节/阿里/华为/NVIDIA等）、重大融资/收购、AI 政策监管。
+===== 通用 AI =====
+**只有涉及AI技术本身进展的才算通用AI：**
+- 大模型发布/更新：GPT、Claude、Gemini、DeepSeek、千问、文心、豆包、Kimi、LLaMA、Mistral等
+- AI产品/工具发布：ChatGPT新功能、Copilot、AI编程工具、AI搜索等
+- AI公司商业动作：OpenAI、Anthropic的融资/上市/合作
+- AI行业政策监管、AI安全研究
+- AI开源项目：LangChain、MCP、Agent框架等
+- AI芯片/算力进展
+**注意：Nature/MIT News/DeepModeling等科研源的论文不属于通用AI，它们是AI for Science**
+
+===== AI for Science =====
+**所有涉及「用AI做科学研究」的内容：**
+- AI用于蛋白质设计、药物发现、材料科学、基因组学、脑科学
+- 科学大模型（DPA、AlphaFold、MatterGen等）
+- AISI、深势科技、DeepModeling、分子之心、上海AI实验室等机构的成果
+- AI驱动的数学、物理、化学、生物突破
+- Nature/Science/Cell上发表的AI相关论文
 
 每篇文章：
-1. **category**: 严格二选一 —— "AI for Science" 或 "通用 AI"
-2. **title_cn**: 中文标题（20字内）
-3. **summary_cn**: 80-120字中文摘要
-4. **score**: 1-10
+1. **category**: "AI for Science" 或 "通用 AI"（二选一）
+2. **title_cn**: 中文（20字内）
+3. **summary_cn**: 80-120字中文
+4. **score**: 1-10（不含AI的Nature普通论文给1-3分）
 
-返回 JSON：[{"index": 0, "category": "AI for Science", "title_cn": "…", "summary_cn": "…", "score": N}]
-每个元素必须有 index 字段。"""
+返回 JSON：[{"index": 0, "category": "…", "title_cn": "…", "summary_cn": "…", "score": N}]
+每个元素必须有 index。"""
 
 
 def summarize_with_llm(
