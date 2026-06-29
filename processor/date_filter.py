@@ -25,10 +25,11 @@ def filter_by_date(
         pub = article.published_at
         if pub is None:
             no_date += 1
-            continue  # strict: must have a real date
-        pub_date = pub.date() if hasattr(pub, "date") else pub
-        if oldest.date() <= pub_date <= target_day:
-            kept.append(article)
+            kept.append(article)  # scrapers/AISI/BAAI = AI4S content, inherently recent
+        else:
+            pub_date = pub.date() if hasattr(pub, "date") else pub
+            if oldest.date() <= pub_date <= target_day:
+                kept.append(article)
 
     logger.info(
         f"Date filter ({oldest.date()} ~ {target_day}): "
