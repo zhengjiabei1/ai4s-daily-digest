@@ -166,7 +166,17 @@ sources:
     max_items: 10
     enabled: false
   arxiv:
-    enabled: false
+    enabled: true
+    categories:
+      - cs.AI
+      - cs.CL
+      - cs.LG
+      - cs.CV
+      - q-bio.BM
+      - physics.chem-ph
+      - cond-mat.mtrl-sci
+    max_results: 50
+    lookback_days: 2
   hacker_news:
     enabled: false
   github_trending:
