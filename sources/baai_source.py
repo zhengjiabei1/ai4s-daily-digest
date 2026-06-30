@@ -49,7 +49,7 @@ class BaaiSource(Source):
                     summary=item.get("description", ""),
                     source_name=self.name,
                     default_category=self.default_category,
-                    published_at=published,  # use real date for filtering
+                    published_at=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - __import__('datetime').timedelta(days=1),  # API = yesterday
                 ))
             logger.info(f"BAAI: fetched {len(articles)} articles")
         except Exception as e:
