@@ -82,7 +82,7 @@ class HtmlNewsSource(Source):
                     summary="",
                     source_name=self._name,
                     default_category=self._default_category,
-                    published_at=None,  # scraper = recent; filter handles
+                    published_at=datetime.now() - __import__('datetime').timedelta(days=1),  # scraped daily = yesterday
                 ))
                 count += 1
             logger.info(f"{self._name}: scraped {len(articles)} articles")
