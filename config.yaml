@@ -168,19 +168,22 @@ sources:
   arxiv:
     enabled: true
     categories:
-      - cs.AI
-      - cs.CL
-      - cs.LG
-      - cs.CV
-      - q-bio.BM
-      - physics.chem-ph
-      - cond-mat.mtrl-sci
+    - cs.AI
+    - cs.CL
+    - cs.LG
+    - cs.CV
+    - q-bio.BM
+    - physics.chem-ph
+    - cond-mat.mtrl-sci
     max_results: 100
     lookback_days: 7
   hacker_news:
     enabled: false
   github_trending:
     enabled: false
+  aihot:
+    enabled: true
+    max_items: 20
 processing:
   dedup_threshold: 85
   max_articles_for_primary_card: 6

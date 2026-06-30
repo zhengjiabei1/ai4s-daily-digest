@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from loguru import logger
 
+from sources.aihot_source import AihotSource
 from sources.aisi_source import AisiSource
 from sources.arxiv_source import ArxivSource
 from sources.base import RawArticle, Source
@@ -96,6 +97,13 @@ class SourceRegistry:
                 article_selector=scraper_cfg.get("article_selector", "a"),
                 base_url=scraper_cfg.get("base_url", scraper_cfg["url"]),
                 max_items=scraper_cfg.get("max_items", 10),
+            ))
+
+        # ── AI Hot public API ──
+        aihot_config = sources_config.get("aihot", {})
+        if aihot_config.get("enabled", True):
+            self._sources.append(AihotSource(
+                max_items=aihot_config.get("max_items", 20),
             ))
 
         # ── Skill-fetched articles (Claude Code skill pre-fetches official pages) ──
