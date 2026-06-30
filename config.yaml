@@ -175,8 +175,8 @@ sources:
       - q-bio.BM
       - physics.chem-ph
       - cond-mat.mtrl-sci
-    max_results: 50
-    lookback_days: 2
+    max_results: 100
+    lookback_days: 7
   hacker_news:
     enabled: false
   github_trending:
