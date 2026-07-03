@@ -102,15 +102,34 @@ sources:
     max_items: 15
     keywords:
     - AI
-    - 人工智能
     - 大模型
     - GPT
+    - ChatGPT
     - OpenAI
+    - Claude
     - DeepSeek
-    - 融资
+    - 千问
+    - 文心
+    - 智谱
+    - Kimi
+    - 豆包
+    - 字节
+    - 阿里
+    - 华为
+    - 腾讯
+    - 百度
+    - NVIDIA
     - 芯片
     - 算力
-    - 机器
+    - GPU
+    - 融资
+    - 上市
+    - 收购
+    - Agent
+    - 智能体
+    - 机器人
+    - 自动驾驶
+    - 开源
   - name: GitHub Trending(RSSHub)
     url: https://rsshub.rssforever.com/github/trending/daily/python
     default_category: 通用 AI
