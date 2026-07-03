@@ -150,21 +150,21 @@ sources:
     article_selector: a.post-title-link
     base_url: https://deepmodeling.com
     max_items: 10
-    enabled: true
+    enabled: false
   - name: 上海 AI 实验室 (浦江)
     url: https://www.shlab.org.cn/info
     default_category: AI for Science
     article_selector: a[href*="/news/"]
     base_url: https://www.shlab.org.cn
     max_items: 10
-    enabled: true
+    enabled: false
   - name: 深势科技
     url: https://www.dp.tech/publish
     default_category: AI for Science
     article_selector: a[href*="mp.weixin.qq.com"]
     base_url: https://www.dp.tech
     max_items: 10
-    enabled: true
+    enabled: false
   arxiv:
     enabled: true
     categories:
@@ -173,10 +173,13 @@ sources:
     - cs.LG
     - cs.CV
     - q-bio.BM
+    - q-bio.QM
+    - q-bio.GN
     - physics.chem-ph
     - cond-mat.mtrl-sci
+    - physics.comp-ph
     max_results: 100
-    lookback_days: 7
+    lookback_days: 3
   hacker_news:
     enabled: false
   github_trending:
