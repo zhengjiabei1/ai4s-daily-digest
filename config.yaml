@@ -95,6 +95,25 @@ sources:
     default_category: 通用 AI
     enabled: true
     max_items: 10
+  - name: 雷锋网
+    url: https://www.leiphone.com/feed
+    default_category: 通用 AI
+    enabled: true
+    max_items: 10
+    keywords:
+    - AI
+    - 人工智能
+    - 大模型
+    - GPT
+    - Claude
+    - OpenAI
+    - DeepSeek
+    - 千问
+    - 智谱
+    - Agent
+    - LLM
+    - NVIDIA
+    - 英伟达
   - name: 36Kr 快讯(RSSHub)
     url: https://rsshub.rssforever.com/36kr/newsflashes
     default_category: 通用 AI
@@ -156,6 +175,22 @@ sources:
     default_category: 通用 AI
     enabled: true
     max_items: 10
+  - name: bioRxiv (生命科学预印本)
+    url: https://connect.biorxiv.org/biorxiv_xml.php?subject=all
+    default_category: AI for Science
+    enabled: true
+    max_items: 15
+    keywords:
+    - AI
+    - machine learning
+    - deep learning
+    - neural
+    - protein
+    - drug
+    - genom
+    - AlphaFold
+    - language model
+    - transformer
   aisi:
     enabled: false
     max_items: 15
@@ -200,12 +235,46 @@ sources:
     max_results: 100
     lookback_days: 3
   hacker_news:
-    enabled: false
+    enabled: true
+    max_stories: 50
+    lookback_hours: 48
+    keywords:
+    - GPT
+    - Claude
+    - OpenAI
+    - Anthropic
+    - DeepSeek
+    - Gemini
+    - LLaMA
+    - LLM
+    - language model
+    - transformer
+    - diffusion
+    - DeepMind
+    - AlphaFold
+    - protein
+    - drug
+    - materials
+    - NVIDIA
+    - GPU
+    - nature
+    - science
+    - paper
+    - Qwen
+    - Mistral
+    - xAI
+    - Grok
+    - agent
+    - Copilot
+    - reasoning
   github_trending:
     enabled: false
   aihot:
     enabled: true
     max_items: 20
+  huggingface:
+    enabled: true
+    max_items: 15
 processing:
   dedup_threshold: 85
   max_articles_for_primary_card: 6

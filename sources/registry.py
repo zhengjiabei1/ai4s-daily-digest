@@ -11,6 +11,7 @@ from sources.base import RawArticle, Source
 from sources.baai_source import BaaiSource
 from sources.github_trending import GithubTrendingSource
 from sources.hacker_news import HackerNewsSource
+from sources.huggingface_source import HuggingFaceSource
 from sources.html_scraper import HtmlNewsSource
 from sources.playwright_source import PlaywrightSource
 from sources.rss_source import RssSource
@@ -97,6 +98,13 @@ class SourceRegistry:
                 article_selector=scraper_cfg.get("article_selector", "a"),
                 base_url=scraper_cfg.get("base_url", scraper_cfg["url"]),
                 max_items=scraper_cfg.get("max_items", 10),
+            ))
+
+        # ── HuggingFace Daily Papers ──
+        hf_config = sources_config.get("huggingface", {})
+        if hf_config.get("enabled", True):
+            self._sources.append(HuggingFaceSource(
+                max_items=hf_config.get("max_items", 15),
             ))
 
         # ── AI Hot public API ──
