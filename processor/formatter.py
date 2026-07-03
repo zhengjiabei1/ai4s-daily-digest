@@ -1,5 +1,6 @@
 """Feishu card formatter — two sections: 【AI for Science】 + 【通用 AI】."""
 
+import json
 from datetime import date
 from typing import Any
 
@@ -10,7 +11,7 @@ WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card."""
+    """Two-section card with star rating buttons."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
@@ -35,7 +36,22 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
+    # Grey assessment area
+    lines.append("<font color='grey'>──────────────</font>")
+    lines.append(f"<font color='grey'>欢迎按星级评价本次推送质量，帮助优化筛选规则</font>")
+
     content = "\n".join(lines)
+
+    # Star rating buttons
+    rating_buttons = []
+    for star in range(1, 6):
+        stars = "⭐" * star
+        rating_buttons.append({
+            "tag": "button",
+            "text": {"tag": "plain_text", "content": f"{stars} {star}星"},
+            "type": "default",
+            "value": json.dumps({"action": "rate", "rating": star, "date": date_str}),
+        })
 
     card = {
         "config": {"wide_screen_mode": True},
@@ -48,6 +64,8 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         },
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
+            {"tag": "hr"},
+            {"tag": "action", "actions": rating_buttons},
         ],
     }
     return _trim_to_limit(card, articles)

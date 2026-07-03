@@ -27,12 +27,14 @@ SYSTEM_PROMPT = """你是 AI 新闻编辑。所有输出**全部中文**。严�
 **注意：Nature/MIT News/DeepModeling等科研源的论文不属于通用AI，它们是AI for Science**
 
 ===== AI for Science =====
-**所有涉及「用AI做科学研究」的内容：**
+**所有涉及「用AI做科学研究」的内容。高分优先：**
+- 官方AI4S政策专项/行动方案/平台建设（如"人工智能赋能科学研究""科学智能""自主实验室""科研智能体"）
 - AI用于蛋白质设计、药物发现、材料科学、基因组学、脑科学
 - 科学大模型（DPA、AlphaFold、MatterGen等）
 - AISI、深势科技、DeepModeling、分子之心、上海AI实验室等机构的成果
 - AI驱动的数学、物理、化学、生物突破
 - Nature/Science/Cell上发表的AI相关论文
+- 官方政策源（政府网站/科技部/科委/基金委）发布的相关内容标为S级
 
 每篇文章：
 1. **category**: "AI for Science" 或 "通用 AI"（二选一）
