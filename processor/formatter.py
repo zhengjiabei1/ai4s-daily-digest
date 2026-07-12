@@ -1,5 +1,6 @@
 """Feishu card formatter — two sections: 【AI for Science】 + 【通用 AI】."""
 
+import json
 from datetime import date
 from typing import Any
 
@@ -10,7 +11,7 @@ WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card with feedback area."""
+    """Two-section card with feedback buttons (long-connection mode)."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
@@ -34,10 +35,6 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
-    # Feedback — simple text prompt that actually works
-    lines.append("<font color='grey'>────────────────────</font>")
-    lines.append("<font color='grey'>对本条推送有任何评价或改进建议，直接回复此消息即可。新闻小助手持续学习中 🙏</font>")
-
     content = "\n".join(lines)
 
     card = {
@@ -51,6 +48,19 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         },
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
+            {"tag": "hr"},
+            {"tag": "div", "text": {"tag": "lark_md",
+                "content": "**您认为本次新闻内容是否有用？**"}},
+            {"tag": "action", "actions": [
+                {"tag": "button", "text": {"tag": "plain_text", "content": "👍 有用"},
+                 "type": "primary",
+                 "value": json.dumps({"action": "feedback", "useful": True, "date": date_str})},
+                {"tag": "button", "text": {"tag": "plain_text", "content": "👎 没有用"},
+                 "type": "default",
+                 "value": json.dumps({"action": "feedback", "useful": False, "date": date_str})},
+            ]},
+            {"tag": "div", "text": {"tag": "lark_md",
+                "content": "<font color='grey'>改进建议请直接回复本消息 ✍️</font>"}},
         ],
     }
     return _trim_to_limit(card, articles)
