@@ -11,7 +11,7 @@ WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card with star rating buttons."""
+    """Two-section card with feedback buttons."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
@@ -19,7 +19,6 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
     general = [a for a in articles if "通用" in a.category]
 
     lines = []
-
     for section_title, section_articles in [("【AI for Science】", ai4s), ("【通用 AI】", general)]:
         if not section_articles:
             continue
@@ -36,22 +35,7 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
-    # Grey assessment area
-    lines.append("<font color='grey'>──────────────</font>")
-    lines.append(f"<font color='grey'>欢迎按星级评价本次推送质量，帮助优化筛选规则</font>")
-
     content = "\n".join(lines)
-
-    # Star rating buttons
-    rating_buttons = []
-    for star in range(1, 6):
-        stars = "⭐" * star
-        rating_buttons.append({
-            "tag": "button",
-            "text": {"tag": "plain_text", "content": f"{stars} {star}星"},
-            "type": "default",
-            "value": json.dumps({"action": "rate", "rating": star, "date": date_str}),
-        })
 
     card = {
         "config": {"wide_screen_mode": True},
@@ -65,7 +49,19 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
             {"tag": "hr"},
-            {"tag": "action", "actions": rating_buttons},
+            {"tag": "div", "text": {"tag": "lark_md",
+                "content": "<font color='grey'>**您认为本次新闻内容是否有用？**</font>"}},
+            {"tag": "action", "actions": [
+                {"tag": "button", "text": {"tag": "plain_text", "content": "👍 有用"},
+                 "type": "primary",
+                 "value": json.dumps({"action": "feedback", "useful": True, "date": date_str})},
+                {"tag": "button", "text": {"tag": "plain_text", "content": "👎 没有用"},
+                 "type": "default",
+                 "value": json.dumps({"action": "feedback", "useful": False, "date": date_str})},
+            ]},
+            {"tag": "hr"},
+            {"tag": "div", "text": {"tag": "lark_md",
+                "content": "<font color='grey'>请您对推送新闻提出宝贵改进意见，直接回复本消息即可，新闻小助手持续学习中 📝</font>"}},
         ],
     }
     return _trim_to_limit(card, articles)
