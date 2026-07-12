@@ -1,6 +1,5 @@
 """Feishu card formatter — two sections: 【AI for Science】 + 【通用 AI】."""
 
-import json
 from datetime import date
 from typing import Any
 
@@ -11,7 +10,7 @@ WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card with feedback buttons."""
+    """Two-section card with feedback prompt."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
@@ -35,6 +34,10 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
+    # Feedback area — uses native Feishu reply (always works, no server needed)
+    lines.append("<font color='grey'>────────────────────</font>")
+    lines.append("<font color='grey'>👉 对本条推送的评价和改进建议，直接回复此消息即可（如：👍/👎 + 意见），新闻小助手会持续学习优化</font>")
+
     content = "\n".join(lines)
 
     card = {
@@ -48,25 +51,6 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         },
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
-            {"tag": "hr"},
-            {"tag": "div", "text": {"tag": "lark_md",
-                "content": "<font color='grey'>**您认为本次新闻内容是否有用？**</font>"}},
-            {"tag": "action", "actions": [
-                {"tag": "button", "text": {"tag": "plain_text", "content": "👍 有用"},
-                 "type": "primary",
-                 "value": json.dumps({"action": "feedback", "useful": True, "date": date_str})},
-                {"tag": "button", "text": {"tag": "plain_text", "content": "👎 没有用"},
-                 "type": "default",
-                 "value": json.dumps({"action": "feedback", "useful": False, "date": date_str})},
-            ]},
-            {"tag": "hr"},
-            {"tag": "action", "actions": [
-                {"tag": "button", "text": {"tag": "plain_text", "content": "✍️ 提出改进意见"},
-                 "type": "default",
-                 "value": json.dumps({"action": "feedback_text", "date": date_str})},
-            ]},
-            {"tag": "div", "text": {"tag": "lark_md",
-                "content": "<font color='grey'>点击上方「提出改进意见」按钮后，直接输入您的建议即可提交 🙏</font>"}},
         ],
     }
     return _trim_to_limit(card, articles)
