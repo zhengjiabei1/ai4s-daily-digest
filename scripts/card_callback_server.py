@@ -43,44 +43,68 @@ def _reply_to_message(msg_id: str, text: str):
 def main():
     from utils.logger import setup_logging
     setup_logging(level="INFO")
-    logger.info("=== 卡片回调监听启动（长连接模式）===")
+    logger.info("=== 卡片回调 HTTP 服务器启动 ===")
 
-    from lark_oapi.event.dispatcher_handler import EventDispatcherHandlerBuilder
-    from lark_oapi.ws import Client
+    from http.server import HTTPServer, BaseHTTPRequestHandler
 
-    # Use raw event handler to bypass SDK's strict type checking on card action value field
-    def raw_handler(event_data: dict):
-        """接收原始事件字典，绕过 SDK 类型检查"""
-        event = event_data.get("event", {})
-        value_raw = event.get("action_value", "") or ""
-        useful = value_raw.startswith("useful_") if value_raw else None
-        label = "有用" if useful else "没有用" if value_raw.startswith("notuseful_") else "评价"
-        open_id = event.get("open_id", "") or ""
-        open_message_id = event.get("open_message_id", "") or ""
+    class CardCallbackHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self._json(200, {"status": "ok"})
 
-        entry = {
-            "timestamp": datetime.now().isoformat(),
-            "user_id": open_id,
-            "action": "card_click",
-            "useful": useful,
-            "date": value_raw.split("_", 1)[-1] if "_" in value_raw else "",
-        }
-        FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(FEEDBACK_FILE, "a") as f:
-            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        def do_POST(self):
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
+            try:
+                data = json.loads(body)
+            except Exception:
+                self._json(400, {})
+                return
 
-        logger.info(f"📮 按钮反馈: {label} from {open_id}")
+            # Feishu URL verification
+            if "challenge" in data:
+                self._json(200, {"challenge": data["challenge"]})
+                return
 
-        if open_message_id:
-            _reply_to_message(open_message_id, f"感谢您的反馈（{label}）！新闻小助手会持续优化 🙏")
+            # Extract feedback
+            action = data.get("action", {})
+            value_raw = action.get("value", "") or ""
+            useful = value_raw.startswith("useful_")
+            label = "有用" if useful else "没有用"
+            open_id = data.get("open_id", "")
 
-    builder = EventDispatcherHandlerBuilder(encrypt_key="", verification_token="")
-    builder.register_p1_customized_event("card.action.trigger", raw_handler)
-    handler = builder.build()
+            entry = {
+                "timestamp": datetime.now().isoformat(),
+                "user_id": open_id,
+                "action": "card_click",
+                "useful": useful,
+                "date": value_raw.split("_", 1)[-1] if "_" in value_raw else "",
+            }
+            FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
+            with open(FEEDBACK_FILE, "a") as f:
+                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+            logger.info(f"📮 按钮反馈: {label} from {open_id}")
+            self._json(200, {"toast": {"type": "success", "content": f"感谢反馈（{label}）！"}})
 
-    client = Client(app_id=AID, app_secret=ASEC, event_handler=handler)
-    logger.info("长连接已就绪 — 卡片按钮点击将实时接收")
-    client.start()
+        def _json(self, status, body):
+            self.send_response(status)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps(body, ensure_ascii=False).encode("utf-8"))
+
+        def log_message(self, fmt, *args):
+            logger.info(f"HTTP: {args[0]}")
+
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument("--port", type=int, default=5099)
+    args = p.parse_args()
+
+    server = HTTPServer(("0.0.0.0", args.port), CardCallbackHandler)
+    logger.info(f"HTTP 服务运行在 :{args.port}")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        logger.info("已停止")
 
 
 if __name__ == "__main__":
