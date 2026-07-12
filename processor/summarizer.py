@@ -45,8 +45,8 @@ AI技术本身的重大进展。不只西方大模型的发布，也覆盖中国
 
 每篇文章：
 1. **category**: "AI for Science" 或 "通用 AI"（二选一）
-2. **title_cn**: 中文（20字内）
-3. **summary_cn**: 80-120字中文
+2. **title_cn**: **必须全部中文**。英文标题必须翻译，不允许原文保留。是中文的保持原样（20字内）
+3. **summary_cn**: **必须全部中文**，80-120字。严禁英文单词或句子
 4. **score**: 1-10（不含AI的Nature普通论文给1-3分）
 
 返回 JSON：[{"index": 0, "category": "…", "title_cn": "…", "summary_cn": "…", "score": N}]

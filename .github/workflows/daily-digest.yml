@@ -39,6 +39,7 @@ jobs:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
           FEISHU_CHAT_ID: ${{ secrets.FEISHU_CHAT_ID }}
+          FEISHU_GROUP_CHAT_ID: "oc_f4046a36f0914b872f9bd60bcdc504ba"
         run: python main.py
 
       - name: Save daily cache

@@ -182,9 +182,14 @@ def _select_diverse(articles: list, max_count: int) -> list:
     return selected
 
 
+# ── Push targets ──
+# GitHub Actions 环境变量可覆盖，不设就用默认值
+PRIVATE_CHAT_ID = os.environ.get("FEISHU_PRIVATE_CHAT_ID")
+GROUP_CHAT_ID = os.environ.get("FEISHU_GROUP_CHAT_ID", "oc_f4046a36f0914b872f9bd60bcdc504ba")
+
+
 def _push(card: dict, config: dict, target_date: date) -> int:
-    """Authenticate and push the card to Feishu. Return 0 on success, 1 on failure."""
-    logger.info("连接飞书...")
+    """Push card to ALL configured targets. Return 0 if all succeed."""
     feishu_config = config.get("feishu", {})
     try:
         token = get_tenant_access_token(
@@ -195,18 +200,40 @@ def _push(card: dict, config: dict, target_date: date) -> int:
         logger.error(f"飞书认证失败: {e}")
         sys.exit(1)
 
-    logger.info("推送消息...")
-    chat_id = feishu_config.get("chat_id", "")
-    if not chat_id:
-        logger.error("未配置 chat_id / open_id")
+    # Collect targets
+    targets = {}
+    # 1. Primary target from config (env var)
+    primary = feishu_config.get("chat_id", "")
+    if primary and not primary.startswith("${"):
+        targets["私聊/主目标"] = primary
+
+    # 2. Private chat override
+    if PRIVATE_CHAT_ID and PRIVATE_CHAT_ID != primary:
+        targets["私聊"] = PRIVATE_CHAT_ID
+
+    # 3. Group chat (always push)
+    if GROUP_CHAT_ID and GROUP_CHAT_ID not in targets.values():
+        targets["群聊"] = GROUP_CHAT_ID
+
+    if not targets:
+        logger.error("未配置任何 chat_id / open_id")
         sys.exit(1)
 
-    success = send_card(card, chat_id=chat_id, token=token)
-    if success:
-        logger.info(f"✅ {target_date} 每日新闻推送成功！")
+    all_ok = True
+    for label, chat_id in targets.items():
+        logger.info(f"推送消息 → {label} ({chat_id})...")
+        ok = send_card(card, chat_id=chat_id, token=token)
+        if ok:
+            logger.info(f"  ✅ {label} 推送成功")
+        else:
+            logger.error(f"  ❌ {label} 推送失败")
+            all_ok = False
+
+    if all_ok:
+        logger.info(f"✅ {target_date} 每日新闻推送成功（{len(targets)}个目标）！")
         return 0
     else:
-        logger.error(f"❌ {target_date} 每日新闻推送失败！")
+        logger.error(f"⚠️ {target_date} 部分推送失败")
         return 1
 
 

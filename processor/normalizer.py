@@ -35,8 +35,20 @@ class Article:
         return self.llm_summary or self.summary or ""
 
     def display_title(self) -> str:
-        """Return the Chinese title if available, otherwise the original."""
-        return self.title_cn or self.title
+        """Return Chinese title; if title_cn is empty or still English, fall back to llm_summary truncation."""
+        cn = self.title_cn or ""
+        if cn and not _is_mostly_ascii(cn):
+            return cn
+        if self.llm_summary:
+            # Use Chinese summary as title fallback
+            return self.llm_summary[:30]
+        return self.title
+
+
+def _is_mostly_ascii(s: str) -> bool:
+    """Check if a string is mostly ASCII (likely English)."""
+    ascii_chars = sum(1 for c in s if c.isascii() and c.isalpha())
+    return len(s) > 0 and ascii_chars / max(len(s), 1) > 0.6
 
 
 def normalize(raw_articles: list[RawArticle]) -> list[Article]:
