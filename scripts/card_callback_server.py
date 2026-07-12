@@ -52,23 +52,18 @@ def main():
     def raw_handler(event_data: dict):
         """接收原始事件字典，绕过 SDK 类型检查"""
         event = event_data.get("event", {})
-        action_value_str = event.get("action_value", "{}") or "{}"
-        try:
-            action_value = json.loads(action_value_str)
-        except Exception:
-            action_value = {}
+        value_raw = event.get("action_value", "") or ""
+        useful = value_raw.startswith("useful_") if value_raw else None
+        label = "有用" if useful else "没有用" if value_raw.startswith("notuseful_") else "评价"
         open_id = event.get("open_id", "") or ""
         open_message_id = event.get("open_message_id", "") or ""
-
-        useful = action_value.get("useful")
-        label = "有用" if useful else "没有用" if useful is not None else "评价"
 
         entry = {
             "timestamp": datetime.now().isoformat(),
             "user_id": open_id,
-            "action": action_value.get("action", "card_click"),
+            "action": "card_click",
             "useful": useful,
-            "date": action_value.get("date", ""),
+            "date": value_raw.split("_", 1)[-1] if "_" in value_raw else "",
         }
         FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
         with open(FEEDBACK_FILE, "a") as f:

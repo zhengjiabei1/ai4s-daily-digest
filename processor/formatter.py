@@ -54,10 +54,10 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
             {"tag": "action", "actions": [
                 {"tag": "button", "text": {"tag": "plain_text", "content": "👍 有用"},
                  "type": "primary",
-                 "value": json.dumps({"action": "feedback", "useful": True, "date": date_str})},
+                 "value": f"useful_{date_str}"},
                 {"tag": "button", "text": {"tag": "plain_text", "content": "👎 没有用"},
                  "type": "default",
-                 "value": json.dumps({"action": "feedback", "useful": False, "date": date_str})},
+                 "value": f"notuseful_{date_str}"},
             ]},
             {"tag": "div", "text": {"tag": "lark_md",
                 "content": "<font color='grey'>改进建议请直接回复本消息 ✍️</font>"}},
