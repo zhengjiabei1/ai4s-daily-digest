@@ -60,8 +60,13 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                  "value": json.dumps({"action": "feedback", "useful": False, "date": date_str})},
             ]},
             {"tag": "hr"},
+            {"tag": "action", "actions": [
+                {"tag": "button", "text": {"tag": "plain_text", "content": "✍️ 提出改进意见"},
+                 "type": "default",
+                 "value": json.dumps({"action": "feedback_text", "date": date_str})},
+            ]},
             {"tag": "div", "text": {"tag": "lark_md",
-                "content": "<font color='grey'>请您对推送新闻提出宝贵改进意见，直接回复本消息即可，新闻小助手持续学习中 📝</font>"}},
+                "content": "<font color='grey'>点击上方「提出改进意见」按钮后，直接输入您的建议即可提交 🙏</font>"}},
         ],
     }
     return _trim_to_limit(card, articles)
