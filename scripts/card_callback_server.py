@@ -40,45 +40,6 @@ def _reply_to_message(msg_id: str, text: str):
     )
 
 
-def handle_card_action(event):
-    """卡片按钮被点击 → 记录反馈 → 回复确认"""
-    action_data = event.event  # P2CardActionTriggerData
-    if not action_data:
-        return
-
-    # Extract action value from button
-    action_value = {}
-    try:
-        value_raw = getattr(action_data, "action_value", "{}") or "{}"
-        action_value = json.loads(value_raw)
-    except Exception:
-        pass
-
-    user_id = getattr(action_data, "open_id", "") or ""
-    msg_id = getattr(action_data, "open_message_id", "") or ""
-
-    useful = action_value.get("useful")
-    label = "有用" if useful else "没有用" if useful is not None else "评价"
-
-    # Save to feedback log
-    entry = {
-        "timestamp": datetime.now().isoformat(),
-        "user_id": user_id,
-        "action": action_value.get("action", "card_click"),
-        "useful": useful,
-        "date": action_value.get("date", ""),
-    }
-    FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(FEEDBACK_FILE, "a") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-
-    logger.info(f"📮 按钮反馈: {label} from {user_id}")
-
-    # Reply to confirm
-    if msg_id:
-        _reply_to_message(msg_id, f"感谢您的反馈（{label}）！新闻小助手会持续优化 🙏")
-
-
 def main():
     from utils.logger import setup_logging
     setup_logging(level="INFO")
@@ -87,8 +48,39 @@ def main():
     from lark_oapi.event.dispatcher_handler import EventDispatcherHandlerBuilder
     from lark_oapi.ws import Client
 
+    # Use raw event handler to bypass SDK's strict type checking on card action value field
+    def raw_handler(event_data: dict):
+        """接收原始事件字典，绕过 SDK 类型检查"""
+        event = event_data.get("event", {})
+        action_value_str = event.get("action_value", "{}") or "{}"
+        try:
+            action_value = json.loads(action_value_str)
+        except Exception:
+            action_value = {}
+        open_id = event.get("open_id", "") or ""
+        open_message_id = event.get("open_message_id", "") or ""
+
+        useful = action_value.get("useful")
+        label = "有用" if useful else "没有用" if useful is not None else "评价"
+
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "user_id": open_id,
+            "action": action_value.get("action", "card_click"),
+            "useful": useful,
+            "date": action_value.get("date", ""),
+        }
+        FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(FEEDBACK_FILE, "a") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+        logger.info(f"📮 按钮反馈: {label} from {open_id}")
+
+        if open_message_id:
+            _reply_to_message(open_message_id, f"感谢您的反馈（{label}）！新闻小助手会持续优化 🙏")
+
     builder = EventDispatcherHandlerBuilder(encrypt_key="", verification_token="")
-    builder.register_p2_card_action_trigger(handle_card_action)
+    builder.register_p1_customized_event("card.action.trigger", raw_handler)
     handler = builder.build()
 
     client = Client(app_id=AID, app_secret=ASEC, event_handler=handler)
