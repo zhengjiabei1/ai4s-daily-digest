@@ -10,7 +10,7 @@ WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card."""
+    """Two-section card with conversation-style feedback prompt."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
@@ -33,6 +33,10 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
             else:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
+
+    # 对话式反馈引导
+    lines.append("<font color='grey'>────────────────────</font>")
+    lines.append("<font color='grey'>💬 您认为本次新闻内容是否有用？有哪些改进建议？直接回复此消息即可，新闻小助手会认真阅读每一条反馈 🙏</font>")
 
     content = "\n".join(lines)
 
