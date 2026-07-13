@@ -129,21 +129,60 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         p = urlparse(self.path)
+        length = int(self.headers.get("Content-Length", 0) or 0)
+        if length == 0:
+            self._json(200, {})
+            return
+        body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
+
+        # Feishu URL verification challenge
+        if "challenge" in body:
+            rsp = {"challenge": body["challenge"]}
+            print(f"verification: {body['challenge'][:20]}...")
+            self._json(200, rsp)
+            return
+
+        # Card button action callback
+        action = body.get("action", {})
+        value_raw = action.get("value", "") or ""
+        open_id = body.get("open_id", "")
+        msg_id = body.get("open_message_id", "")
+
+        # Handle feedback
+        useful = None
+        if "useful" in value_raw:
+            try: useful = json.loads(value_raw).get("useful")
+            except: useful = "true" in value_raw
+        elif value_raw == "useful": useful = True
+        elif value_raw == "notuseful": useful = False
+
+        label = "有用" if useful else "没有用" if useful is not None else "?"
+
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "user_id": open_id,
+            "action": "card_click",
+            "useful": useful,
+            "value_raw": value_raw,
+        }
+        FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(FEEDBACK_FILE, "a") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        print(f"📮 卡片按钮: {label} from {open_id}")
+
+        # Reply as toast (Feishu requires this format)
+        resp = {
+            "toast": {"type": "success", "content": f"感谢反馈（{label}）！"},
+            "card": {"type": "raw", "data": ""},  # no card update, just toast
+        }
         if p.path == "/api/suggest":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
             text = body.get("text", "").strip()
             date = body.get("date", "")
             if text:
                 _send_to_user(f"[新闻反馈] ({date}) {text}")
-                entry = {"timestamp": datetime.now().isoformat(), "type": "suggestion", "text": text, "date": date}
-                FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
-                with open(FEEDBACK_FILE, "a") as f:
-                    f.write(json.dumps(entry, ensure_ascii=False) + "\n")
                 print(f"📝 建议: {text[:60]}")
-            self._json(200, {"ok": True})
-        else:
-            self._json(200, {"ok": True})
+            resp["toast"]["content"] = f"反馈已提交！"
+        self._json(200, resp)
 
     def _html(self, content):
         self.send_response(200)

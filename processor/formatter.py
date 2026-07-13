@@ -2,20 +2,17 @@
 
 from datetime import date
 from typing import Any
-from urllib.parse import urlencode
 
 from processor.normalizer import Article
 
 MAX_CARD_BYTES = 30_000
 WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-FEEDBACK_URL = "https://suing-celibacy-bouncy.ngrok-free.dev"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card with URL feedback button opening a nice webpage."""
+    """Two-section card."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
-    fb_link = f"{FEEDBACK_URL}?{urlencode({'date': date_str})}"
 
     ai4s = [a for a in articles if "AI for Science" in a.category or a.category.startswith("AI4S")]
     general = [a for a in articles if "通用" in a.category]
@@ -37,8 +34,6 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
-    lines.append("<font color='grey'>────────────────────</font>")
-    lines.append("<font color='grey'>改进建议请直接回复本消息 ✍️</font>")
     content = "\n".join(lines)
 
     card = {
@@ -52,15 +47,6 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         },
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
-            {"tag": "hr"},
-            {"tag": "div", "text": {"tag": "lark_md",
-                "content": "**👇 点击下方按钮，即可评价并填写改进建议**"}},
-            {"tag": "action", "actions": [
-                {"tag": "button", "text": {"tag": "plain_text", "content": "📝 反馈与建议"},
-                 "type": "primary",
-                 "url": fb_link,
-                 "multi_url": {"url": fb_link, "pc_url": fb_link, "android_url": fb_link, "ios_url": fb_link}},
-            ]},
         ],
     }
     return _trim_to_limit(card, articles)
