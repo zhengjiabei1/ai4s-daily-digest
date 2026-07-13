@@ -2,15 +2,17 @@
 
 from datetime import date
 from typing import Any
+from urllib.parse import urlencode
 
 from processor.normalizer import Article
 
 MAX_CARD_BYTES = 30_000
 WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+FEEDBACK_BASE = "https://suing-celibacy-bouncy.ngrok-free.dev/api/feedback"
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
-    """Two-section card."""
+    """Two-section card with URL feedback buttons (no callback needed)."""
     date_str = digest_date.strftime("%Y-%m-%d")
     weekday = WEEKDAYS[digest_date.weekday()]
 
@@ -34,6 +36,8 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
+    lines.append("<font color='grey'>────────────────────</font>")
+    lines.append("<font color='grey'>改进建议请直接回复本消息 ✍️</font>")
     content = "\n".join(lines)
 
     card = {
@@ -47,6 +51,29 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         },
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
+            {"tag": "hr"},
+            {"tag": "div", "text": {"tag": "lark_md",
+                "content": "**您认为本次新闻内容是否有用？**"}},
+            {"tag": "action", "actions": [
+                {"tag": "button", "text": {"tag": "plain_text", "content": "👍 有用"},
+                 "type": "primary",
+                 "url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'true', 'date': date_str})}",
+                 "multi_url": {
+                     "url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'true', 'date': date_str})}",
+                     "pc_url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'true', 'date': date_str})}",
+                     "android_url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'true', 'date': date_str})}",
+                     "ios_url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'true', 'date': date_str})}",
+                 }},
+                {"tag": "button", "text": {"tag": "plain_text", "content": "👎 没有用"},
+                 "type": "default",
+                 "url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'false', 'date': date_str})}",
+                 "multi_url": {
+                     "url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'false', 'date': date_str})}",
+                     "pc_url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'false', 'date': date_str})}",
+                     "android_url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'false', 'date': date_str})}",
+                     "ios_url": f"{FEEDBACK_BASE}?{urlencode({'useful': 'false', 'date': date_str})}",
+                 }},
+            ]},
         ],
     }
     return _trim_to_limit(card, articles)
