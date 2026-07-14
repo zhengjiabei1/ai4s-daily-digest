@@ -275,6 +275,11 @@ sources:
   huggingface:
     enabled: true
     max_items: 15
+  discovery:
+    enabled: true
+    max_queries: 20
+    results_per_query: 5
+    max_items: 50
 processing:
   dedup_threshold: 85
   max_articles_for_primary_card: 6

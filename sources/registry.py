@@ -9,6 +9,7 @@ from sources.aisi_source import AisiSource
 from sources.arxiv_source import ArxivSource
 from sources.base import RawArticle, Source
 from sources.baai_source import BaaiSource
+from sources.discovery import DiscoverySource
 from sources.github_trending import GithubTrendingSource
 from sources.hacker_news import HackerNewsSource
 from sources.huggingface_source import HuggingFaceSource
@@ -112,6 +113,15 @@ class SourceRegistry:
         if aihot_config.get("enabled", True):
             self._sources.append(AihotSource(
                 max_items=aihot_config.get("max_items", 20),
+            ))
+
+        # ── Active Discovery (web search beyond RSS) ──
+        discovery_config = sources_config.get("discovery", {})
+        if discovery_config.get("enabled", True):
+            self._sources.append(DiscoverySource(
+                max_queries=discovery_config.get("max_queries", 20),
+                results_per_query=discovery_config.get("results_per_query", 5),
+                max_items=discovery_config.get("max_items", 50),
             ))
 
         # ── Skill-fetched articles (Claude Code skill pre-fetches official pages) ──

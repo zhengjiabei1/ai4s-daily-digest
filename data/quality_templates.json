@@ -1,0 +1,45 @@
+{
+  "last_updated": "2026-07-14",
+  "search_domains": [
+    "kw.beijing.gov.cn",
+    "www.most.gov.cn",
+    "www.miit.gov.cn",
+    "www.cas.cn",
+    "www.gov.cn",
+    "www.news.cn",
+    "www.people.com.cn",
+    "www.stdaily.com",
+    "www.shlab.org.cn",
+    "www.baai.ac.cn",
+    "deepmodeling.com",
+    "www.dp.tech",
+    "www.nature.com",
+    "www.science.org",
+    "arxiv.org",
+    "www.jiqizhixin.com",
+    "www.qbitai.com"
+  ],
+  "topics": [
+    "人工智能 政策 2026",
+    "大模型 发布 更新",
+    "AI for Science 科研 突破",
+    "蛋白质 设计 AI 最新",
+    "材料 发现 AI 进展",
+    "药物 研发 AI 2026",
+    "自动驾驶 AI 进展",
+    "机器人 智能体 发布",
+    "芯片 AI 算力 进展",
+    "DeepSeek 千问 文心 更新",
+    "GPT Claude Gemini 发布",
+    "AI 安全 监管 政策",
+    "科学智能 平台 基础设施",
+    "自主实验室 机器科学家",
+    "AI 融资 收购 2026"
+  ],
+  "search_templates": [
+    {"query": "{topic} site:{domain}", "source_type": "政府政策", "domain": "gov.cn"},
+    {"query": "{topic} 最新进展 2026", "source_type": "科研突破", "domain": ""},
+    {"query": "{topic} Nature OR Science", "source_type": "顶刊论文", "domain": "nature.com"},
+    {"query": "{topic} 官方 发布", "source_type": "官方公告", "domain": ""}
+  ]
+}
