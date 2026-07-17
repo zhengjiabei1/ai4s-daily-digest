@@ -1,5 +1,6 @@
 """Feishu card formatter — two sections: 【AI for Science】 + 【通用 AI】."""
 
+import os
 from datetime import date
 from typing import Any
 
@@ -7,6 +8,10 @@ from processor.normalizer import Article
 
 MAX_CARD_BYTES = 30_000
 WEEKDAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+FEEDBACK_FORM_URL = os.environ.get(
+    "FEEDBACK_FORM_URL",
+    "https://ucoyxk075n.feishu.cn/share/base/form/shrcnIiQVvEYA5BPnr1Ss5ccGMj",
+)
 
 
 def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
@@ -34,9 +39,9 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
                 lines.append(f"{i}. **{title}**  \n{summary}")
             lines.append("")
 
-    # 对话式反馈引导
+    # 反馈按钮
     lines.append("<font color='grey'>────────────────────</font>")
-    lines.append("<font color='grey'>💬 您认为本次新闻内容是否有用？有哪些改进建议？直接回复此消息即可，新闻小助手会认真阅读每一条反馈 🙏</font>")
+    lines.append("<font color='grey'>💬 觉得内容如何？点击下方按钮填写反馈 👇</font>")
 
     content = "\n".join(lines)
 
@@ -51,6 +56,16 @@ def build_card(articles: list[Article], digest_date: date) -> dict[str, Any]:
         },
         "elements": [
             {"tag": "div", "text": {"tag": "lark_md", "content": content}},
+            # URL 按钮 — 点击在飞书内打开表单
+            {
+                "tag": "action",
+                "actions": [{
+                    "tag": "button",
+                    "text": {"tag": "plain_text", "content": "📝 填写反馈"},
+                    "type": "primary",
+                    "url": FEEDBACK_FORM_URL,
+                }],
+            },
         ],
     }
     return _trim_to_limit(card, articles)

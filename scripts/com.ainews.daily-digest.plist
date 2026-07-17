@@ -8,20 +8,33 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/zhengjiabei/Downloads/NEWS/venv/bin/python3</string>
-        <string>/Users/zhengjiabei/Downloads/NEWS/main.py</string>
+        <string>/bin/bash</string>
+        <string>/Users/zhengjiabei/Downloads/NEWS/scripts/run_daily.sh</string>
     </array>
 
     <key>WorkingDirectory</key>
     <string>/Users/zhengjiabei/Downloads/NEWS</string>
 
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>10</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
+    <!--
+      Two daily triggers (local fallback; GitHub Actions is primary):
+      10:00 — morning delivery
+      16:00 — afternoon retry if morning failed (machine asleep, etc.)
+    -->
+    <key>StartCalendarIntervals</key>
+    <array>
+        <dict>
+            <key>Hour</key>
+            <integer>10</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+        <dict>
+            <key>Hour</key>
+            <integer>16</integer>
+            <key>Minute</key>
+            <integer>0</integer>
+        </dict>
+    </array>
 
     <key>StandardOutPath</key>
     <string>/Users/zhengjiabei/Downloads/NEWS/logs/stdout.log</string>

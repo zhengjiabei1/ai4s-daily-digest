@@ -285,6 +285,9 @@ processing:
   max_articles_for_primary_card: 6
   batch_size_for_llm: 10
   min_score: 1
+feedback:
+  base_url: ${FEEDBACK_BASE_URL}
+  admin_password: ${FEEDBACK_ADMIN_PASSWORD}
 logging:
   level: INFO
   log_dir: logs/

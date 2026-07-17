@@ -15,6 +15,11 @@ data/token_cache.json
 data/digest_cache.json
 data/skill_fetched.json
 data/p2p_seen.json
+data/feedback.db
+data/feedback.db-shm
+data/feedback.db-wal
+data/feedback.jsonl
+data/poller_state.json
 
 # Logs
 logs/*.log

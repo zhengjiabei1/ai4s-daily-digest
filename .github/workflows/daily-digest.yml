@@ -2,9 +2,12 @@ name: Daily AI News Digest
 
 on:
   schedule:
-    # Target: 10:30 AM Beijing (UTC+8). Set to UTC 22:00 (6:00 AM BJT)
-    # to allow 4-5h GitHub scheduler delay — arrives between 10:00-11:00 BJT
+    # Primary: UTC 22:00 = 6:00 AM BJT. With 4-5h GitHub scheduler delay,
+    # arrives between 10:00-11:00 BJT.
     - cron: '0 22 * * *'
+    # Fallback: UTC 2:00 = 10:00 AM BJT. Fires if primary was skipped.
+    # With delay, arrives by ~15:00 BJT — still same day for yesterday's news.
+    - cron: '0 2 * * *'
   workflow_dispatch:  # manual trigger for testing
 
 jobs:
@@ -39,7 +42,9 @@ jobs:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
           FEISHU_CHAT_ID: ${{ secrets.FEISHU_CHAT_ID }}
+          FEISHU_PRIVATE_CHAT_ID: "ou_77209a49330aea6375d44a224cd49882"
           FEISHU_GROUP_CHAT_ID: "oc_f4046a36f0914b872f9bd60bcdc504ba"
+          FEEDBACK_BASE_URL: ${{ vars.FEEDBACK_BASE_URL }}
         run: python main.py
 
       - name: Save daily cache

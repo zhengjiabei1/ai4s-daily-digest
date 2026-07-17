@@ -54,6 +54,16 @@ class ArxivSource(Source):
 
             feed = feedparser.parse(url)
 
+            # Diagnose empty responses
+            if not feed.entries:
+                status = getattr(feed, "status", None)
+                bozo = getattr(feed, "bozo_exception", None)
+                logger.warning(
+                    f"Arxiv API returned 0 entries (status={status}, "
+                    f"bozo={str(bozo)[:120] if bozo else 'None'})"
+                )
+                return articles
+
             cutoff = datetime.now() - timedelta(days=self._lookback_days)
 
             for entry in feed.entries:
