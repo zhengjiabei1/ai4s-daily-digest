@@ -1,9 +1,10 @@
 name: Poll Feedback Messages
 
 on:
-  schedule:
-    # Every 10 minutes, offset by 3 min to avoid :00/:30 rush
-    - cron: '3,13,23,33,43,53 * * * *'
+  # SCHEDULED POLLING IS DISABLED.
+  # Uncomment to re-enable:
+  # schedule:
+  #   - cron: '3,13,23,33,43,53 * * * *'
   workflow_dispatch:
 
 jobs:

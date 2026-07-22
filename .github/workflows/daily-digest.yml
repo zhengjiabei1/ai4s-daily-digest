@@ -1,13 +1,11 @@
 name: Daily AI News Digest
 
 on:
-  schedule:
-    # Primary: UTC 22:00 = 6:00 AM BJT. With 4-5h GitHub scheduler delay,
-    # arrives between 10:00-11:00 BJT.
-    - cron: '0 22 * * *'
-    # Fallback: UTC 2:00 = 10:00 AM BJT. Fires if primary was skipped.
-    # With delay, arrives by ~15:00 BJT — still same day for yesterday's news.
-    - cron: '0 2 * * *'
+  # SCHEDULED PUSHING IS DISABLED.
+  # Uncomment the lines below to re-enable automatic daily pushes.
+  # schedule:
+  #   - cron: '0 22 * * *'
+  #   - cron: '0 2 * * *'
   workflow_dispatch:  # manual trigger for testing
 
 jobs:
